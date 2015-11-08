@@ -1,0 +1,91 @@
+\documentclass[12pt,conference,onecolumn]{IEEEtran} %This uses the IEEE template
+
+%Set up for inputing Figures
+\usepackage[pdftex]{graphicx}
+\usepackage{wrapfig}
+\usepackage[utf8]{inputenc}
+%Include math packages
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{latexsym}
+%Added Recommended packages
+\usepackage{csquotes}
+\usepackage[backend=biber]{biblatex}
+\usepackage{hyperref}
+\usepackage{cleveref}
+%Include packages for line spacing
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{verbatim}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{subfigure}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{beramono}
+\newcommand\Small{\fontsize{9}{9.2}\selectfont}
+\newcommand*\LSTfont{\Small\ttfamily\SetTracking{encoding=*}{-60}\lsstyle}
+
+\addbibresource{/home/ivan/Documents/Latex_Stuff/BibDB/AllEntries.bib}
+%dont think I need to use the graphics path yet
+\graphicspath{{/home/ivan/src/Internship_GTRI/Documentation/Images/}
+{/home/ivan/src/Internship_GTRI/Documentation/Images/screenshot/}} %Change this to your path!!!
+
+\DeclareGraphicsExtensions{.pdf,.jpeg,.jpg,.png} %Make sure your figure extension is included in this list
+
+%simple command to add a figure 
+%\myfigure{address}{caption}{width}{label}
+\newcommand{\myfigure}[4]{
+  \begin{figure}[h!]
+      \centering
+      \includegraphics[width=#3\textwidth]{#1}
+      \caption{#2}
+\label{#4}
+    \end{figure}
+}
+
+%simple command to add a figure wrapped in text
+%\myfigure{image/address}{R_L_PLACEMENT}{width_in_text_width}{caption}{label}
+\newcommand{\mywrapfigure}[5]{
+  \begin{wrapfigure}{#2}{#3\textwidth}
+    \centering
+    \includegraphics[width=#3\textwidth]{#1}
+    \caption{#4}
+\label{#5}
+  \end{wrapfigure}
+}
+
+\newcommand*{\figuretitle}[1]{%
+    {\centering%   <--------  will only affect the title because of the grouping (by the
+    \textbf{#1}%              braces before \centering and behind \medskip). If you remove
+    \par\medskip}%            these braces the whole body of a {figure} env will be centered.
+}
+
+%Set up spacing
+\linespread{1.3} %This creates 1.5 spacing
+\setlength{\parindent}{12pt} %Sets the length of the indent at the beginning of each paragraph.
+
+%Start the document
+\begin{document}
+
+\title{\vspace*{70mm}
+An Incremental Approach to DE-2 Bot Robot Navigation}
+
+\author{Students: 
+}
+
+\maketitle
+
+\pagebreak{}
+
+% \begin{abstract}
+ 
+% \end{abstract}
+
+\section{A Section}
+
+
+\pagebreak
+\printbibliography{}
+\end{document}
