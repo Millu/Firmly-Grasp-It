@@ -1,0 +1,197 @@
+-- Altera Memory Initialization File (MIF)
+
+DEPTH = 2048;
+WIDTH = 16;
+
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+
+CONTENT
+  BEGIN
+    [000..7FF] : 0000;  -- Default to NOP
+
+           000 : 0893;  -- 	LOAD   Zero
+           001 : 9883;  -- 	OUT    LVELCMD     ; Stop motors
+           002 : 988B;  -- 	OUT    RVELCMD
+           003 : 98B2;  -- 	OUT    SONAREN     ; Disable sonar (optional)
+           004 : 980A;  -- 	OUT    BEEP        ; Stop any beeping (optional)
+           005 : 807B;  -- 	CALL   SetupI2C    ; Configure the I2C to read the battery voltage
+           006 : 805D;  -- 	CALL   BattCheck   ; Get battery voltage (and end if too low).
+           007 : 9806;  -- 	OUT    LCD         ; Display battery voltage (hex, tenths of volts)
+           008 : 9000;  -- 	IN     SWITCHES
+           009 : 980A;  -- 	OUT    BEEP
+           00A : 9003;  -- 	IN     XIO         ; XIO contains SAFETY signal
+           00B : 48A2;  -- 	AND    Mask4       ; SAFETY signal is bit 4
+           00C : 3812;  -- 	JPOS   WaitForUser ; If ready, jump to wait for PB3
+           00D : 9002;  -- 	IN     TIMER       ; We'll use the timer value to
+           00E : 489F;  -- 	AND    Mask1       ;  blink LED17 as a reminder to toggle SW17
+           00F : 6008;  -- 	SHIFT  8           ; Shift over to LED17
+           010 : 9807;  -- 	OUT    XLEDS       ; LED17 blinks at 2.5Hz (10Hz/4)
+           011 : 2808;  -- 	JUMP   WaitForSafety
+           012 : B800;  -- 	LOADI  0
+           013 : 980A;  -- 	OUT    BEEP
+           014 : 9002;  -- 	IN     TIMER       ; We'll blink the LEDs above PB3
+           015 : 489F;  -- 	AND    Mask1
+           016 : 6005;  -- 	SHIFT  5           ; Both LEDG6 and LEDG7
+           017 : 1091;  -- 	STORE  Temp        ; (overkill, but looks nice)
+           018 : 6001;  -- 	SHIFT  1
+           019 : 5091;  -- 	OR     Temp
+           01A : 9807;  -- 	OUT    XLEDS
+           01B : 9003;  -- 	IN     XIO         ; XIO contains KEYs
+           01C : 48A0;  -- 	AND    Mask2       ; KEY3 mask (KEY0 is reset and can't be read)
+           01D : 3812;  -- 	JPOS   WaitForUser ; not ready (KEYs are active-low, hence JPOS)
+           01E : 0893;  -- 	LOAD   Zero
+           01F : 9807;  -- 	OUT    XLEDS       ; clear LEDs once ready to continue
+           020 : 98C3;  -- 	OUT  RESETPOS    ; reset odometer in case wheels moved after programming	
+           021 : 08B3;  -- 	LOAD FFast
+           022 : 988B;  -- 	OUT RVELCMD
+           023 : 9883;  -- 	OUT LVELCMD
+           024 : 9088;  -- 	IN RPOS
+           025 : 20AA;  -- 	SUB TwoFeet
+           026 : 20AA;  -- 	SUB TwoFeet
+           027 : 3021;  -- 	JNEG waitr
+           028 : 0893;  -- 	LOAD Zero
+           029 : 18B3;  -- 	ADD FFast
+           02A : 9883;  -- 	OUT LVELCMD 
+           02B : 20B3;  -- 	SUB FFast
+           02C : 20B3;  -- 	SUB FFast
+           02D : 988B;  -- 	OUT RVELCMD
+           02E : 90C2;  -- 	IN THETA
+           02F : 6EC5;  -- 	ADDI -315
+           030 : 3828;  -- 	JPOS waitm
+           031 : 804D;  -- 	CALL DIE
+           032 : 90C2;  -- 	IN     THETA       ; get the current angular position
+           033 : 6F4C;  -- 	ADDI   -180        ; test whether facing 0-179 or 180-359
+           034 : 3837;  -- 	JPOS   NegAngle    ; robot facing 180-360; handle that separately
+           035 : 68B4;  -- 	ADDI   180         ; undo previous subtraction
+           036 : 2838;  -- 	JUMP   CheckAngle  ; THE+TA positive, so carry on
+           037 : 6F4C;  -- 	ADDI   -180        ; finish conversion to negative angle:
+           038 : 9806;  -- 	OUT    LCD         ; Good data to display for debugging
+           039 : 383E;  -- 	JPOS   TurnRight   ; handle +/- separately
+           03A : 1844;  -- 	ADD    DeadZone
+           03B : 3842;  -- 	JPOS   NoTurn
+           03C : 08B0;  -- 	LOAD   RSlow
+           03D : 2845;  -- 	JUMP   SendToMotors
+           03E : 2044;  -- 	SUB    DeadZone    ; if near 0, don't turn
+           03F : 3042;  -- 	JNEG   NoTurn
+           040 : 08AF;  -- 	LOAD   FSlow
+           041 : 2845;  -- 	JUMP   SendToMotors
+           042 : B800;  -- 	LOADI  0           ; new LOADI instruction
+           043 : 2845;  -- 	JUMP   SendToMotors
+           044 : 0005;  -- DeadZone:  DW 5        ; Note that you can place data anywhere.
+           045 : 1091;  -- 	STORE  Temp        ; store calculated desired velocity
+           046 : 9883;  -- 	OUT    LVELCMD
+           047 : 9804;  -- 	OUT    SSEG1       ; for debugging purposes
+           048 : B800;  -- 	LOADI  0
+           049 : 2091;  -- 	SUB    Temp        ; AC = 0 - velocity
+           04A : 988B;  -- 	OUT    RVELCMD	
+           04B : 9805;  -- 	OUT    SSEG2       ; debugging
+           04C : 2832;  -- 	JUMP   GetAngle    ; repeat forever
+           04D : 0893;  -- 	LOAD   Zero         ; Stop everything.
+           04E : 9883;  -- 	OUT    LVELCMD
+           04F : 988B;  -- 	OUT    RVELCMD
+           050 : 98B2;  -- 	OUT    SONAREN
+           051 : 0854;  -- 	LOAD   DEAD         ; An indication that we are dead
+           052 : 9805;  -- 	OUT    SSEG2
+           053 : 2853;  -- 	JUMP   Forever      ; Do this forever.
+           054 : DEAD;  -- 	DEAD:  DW &HDEAD    ; Example of a "local" variable
+           055 : 9802;  -- 	OUT    TIMER
+           056 : 90C9;  -- 	IN     LIN
+           057 : 9805;  -- 	OUT    SSEG2
+           058 : 9002;  -- 	IN     TIMER
+           059 : 9807;  -- 	OUT    XLEDS       ; User-feedback that a pause is occurring.
+           05A : 6FF6;  -- 	ADDI   -10         ; 1 second in 10Hz.
+           05B : 3056;  -- 	JNEG   Wloop
+           05C : 8800;  -- 	RETURN
+           05D : 8075;  -- 	CALL   GetBattLvl
+           05E : 405D;  -- 	JZERO  BattCheck   ; A/D hasn't had time to initialize
+           05F : 20B5;  -- 	SUB    MinBatt
+           060 : 3063;  -- 	JNEG   DeadBatt
+           061 : 18B5;  -- 	ADD    MinBatt     ; get original value back
+           062 : 8800;  -- 	RETURN
+           063 : 0897;  -- 	LOAD   Four
+           064 : 980A;  -- 	OUT    BEEP        ; start beep sound
+           065 : 8075;  -- 	CALL   GetBattLvl  ; get the battery level
+           066 : 9804;  -- 	OUT    SSEG1       ; display it everywhere
+           067 : 9805;  -- 	OUT    SSEG2
+           068 : 9806;  -- 	OUT    LCD
+           069 : 0893;  -- 	LOAD   Zero
+           06A : 6FFF;  -- 	ADDI   -1          ; 0xFFFF
+           06B : 9801;  -- 	OUT    LEDS        ; all LEDs on
+           06C : 9807;  -- 	OUT    XLEDS
+           06D : 8055;  -- 	CALL   Wait1       ; 1 second
+           06E : 0893;  -- 	Load   Zero
+           06F : 980A;  -- 	OUT    BEEP        ; stop beeping
+           070 : 0893;  -- 	LOAD   Zero
+           071 : 9801;  -- 	OUT    LEDS        ; LEDs off
+           072 : 9807;  -- 	OUT    XLEDS
+           073 : 8055;  -- 	CALL   Wait1       ; 1 second
+           074 : 2863;  -- 	JUMP   DeadBatt    ; repeat forever
+           075 : 08B7;  -- 	LOAD   I2CRCmd     ; 0x0190 (write 0B, read 1B, addr 0x90)
+           076 : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD
+           077 : 9892;  -- 	OUT    I2C_RDY     ; start the communication
+           078 : 8083;  -- 	CALL   BlockI2C    ; wait for it to finish
+           079 : 9091;  -- 	IN     I2C_DATA    ; get the returned data
+           07A : 8800;  -- 	RETURN
+           07B : 8083;  -- 	CALL   BlockI2C    ; wait for idle
+           07C : 08B6;  -- 	LOAD   I2CWCmd     ; 0x1190 (write 1B, read 1B, addr 0x90)
+           07D : 9890;  -- 	OUT    I2C_CMD     ; to I2C_CMD register
+           07E : 0893;  -- 	LOAD   Zero        ; 0x0000 (A/D port 0, no increment)
+           07F : 9891;  -- 	OUT    I2C_DATA    ; to I2C_DATA register
+           080 : 9892;  -- 	OUT    I2C_RDY     ; start the communication
+           081 : 8083;  -- 	CALL   BlockI2C    ; wait for it to finish
+           082 : 8800;  -- 	RETURN
+           083 : 0893;  -- 	LOAD   Zero
+           084 : 1091;  -- 	STORE  Temp        ; Used to check for timeout
+           085 : 0891;  -- 	LOAD   Temp
+           086 : 6801;  -- 	ADDI   1           ; this will result in ~0.1s timeout
+           087 : 1091;  -- 	STORE  Temp
+           088 : 408C;  -- 	JZERO  I2CError    ; Timeout occurred; error
+           089 : 9092;  -- 	IN     I2C_RDY     ; Read busy signal
+           08A : 3885;  -- 	JPOS   BI2CL       ; If not 0, try again
+           08B : 8800;  -- 	RETURN             ; Else return
+           08C : 0893;  -- 	LOAD   Zero
+           08D : 692C;  -- 	ADDI   &H12C       ; "I2C"
+           08E : 9804;  -- 	OUT    SSEG1
+           08F : 9805;  -- 	OUT    SSEG2       ; display error message
+           090 : 288C;  -- 	JUMP   I2CError
+           091 : 0000;  -- Temp:     DW 0 ; "Temp" is not a great name, but can be useful
+           092 : FFFF;  -- NegOne:   DW -1
+           093 : 0000;  -- Zero:     DW 0
+           094 : 0001;  -- One:      DW 1
+           095 : 0002;  -- Two:      DW 2
+           096 : 0003;  -- Three:    DW 3
+           097 : 0004;  -- Four:     DW 4
+           098 : 0005;  -- Five:     DW 5
+           099 : 0006;  -- Six:      DW 6
+           09A : 0007;  -- Seven:    DW 7
+           09B : 0008;  -- Eight:    DW 8
+           09C : 0009;  -- Nine:     DW 9
+           09D : 000A;  -- Ten:      DW 10
+           09E : 0001;  -- Mask0:    DW &B00000001
+           09F : 0002;  -- Mask1:    DW &B00000010
+           0A0 : 0004;  -- Mask2:    DW &B00000100
+           0A1 : 0008;  -- Mask3:    DW &B00001000
+           0A2 : 0010;  -- Mask4:    DW &B00010000
+           0A3 : 0020;  -- Mask5:    DW &B00100000
+           0A4 : 0040;  -- Mask6:    DW &B01000000
+           0A5 : 0080;  -- Mask7:    DW &B10000000
+           0A6 : 00FF;  -- LowByte:  DW &HFF      ; binary 00000000 1111111
+           0A7 : 000F;  -- LowNibl:  DW &HF       ; 0000 0000 0000 1111
+           0A8 : 03C1;  -- OneMeter: DW 961       ; ~1m in 1.04mm units
+           0A9 : 01E1;  -- HalfMeter: DW 481      ; ~0.5m in 1.04mm units
+           0AA : 024A;  -- TwoFeet:  DW 586       ; ~2ft in 1.04mm units
+           0AB : 005A;  -- Deg90:    DW 90        ; 90 degrees in odometer units
+           0AC : 00B4;  -- Deg180:   DW 180       ; 180
+           0AD : 010E;  -- Deg270:   DW 270       ; 270
+           0AE : 0168;  -- Deg360:   DW 360       ; can never actually happen; for math only
+           0AF : 0064;  -- FSlow:    DW 100       ; 100 is about the lowest velocity value that will move
+           0B0 : FF9C;  -- RSlow:    DW -100
+           0B1 : 015E;  -- FMid:     DW 350       ; 350 is a medium speed
+           0B2 : FEA2;  -- RMid:     DW -350
+           0B3 : 01F4;  -- FFast:    DW 500       ; 500 is almost max speed (511 is max)
+           0B4 : FE0C;  -- RFast:    DW -500
+           0B5 : 008C;  -- MinBatt:  DW 140       ; 14.0V - minimum safe battery voltage
+           0B6 : 1190;  -- I2CWCmd:  DW &H1190    ; write one i2c byte, read one byte, addr 0x90
+           0B7 : 0190;  -- I2CRCmd:  DW &H0190    ; write nothing, read one byte, addr 0x90
+  END;
