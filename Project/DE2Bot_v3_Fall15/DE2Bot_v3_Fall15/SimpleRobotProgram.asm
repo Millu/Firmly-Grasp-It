@@ -77,9 +77,41 @@ WaitForUser:
 ;***************************************************************
 Main: ; "Real" program starts here.
 	; You will probably want to reset the position at the start your project code:
-	OUT    RESETPOS    ; reset odometer in case wheels moved after programming
-	CALL   UARTClear   ; empty the UART receive FIFO of any old data
-	JUMP   Example1
+	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
+	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
+	LOAD	-4,  1
+
+	
+move:	
+	LOAD FFast
+	OUT RVELCMD
+	OUT LVELCMD
+	IN RPOS
+	SUB TwoFeet
+	SUB TwoFeet
+	JNEG move
+
+	
+waitm:	
+	LOAD Zero
+	ADD FFast
+	OUT LVELCMD 
+	SUB FFast
+	SUB FFast
+	OUT RVELCMD
+	IN THETA
+	ADDI -315
+	JPOS waitm
+	CALL DIE
+	
+	
+	
+;***************************************************************
+;* Set Current Points
+;***************************************************************
+CurrPos:
+		
+	
 	
 ; This table is used in example 1.  Remember: DW puts these
 ; values in memory, and since SCOMP has unified memory, it
@@ -818,7 +850,40 @@ L2Y:  DW 0
 L2T1: DW 0
 L2T2: DW 0
 L2T3: DW 0
-	
+
+
+;***************************************************************
+;* Inputs
+;***************************************************************
+Pointer:	DW &H500
+
+ORG &H500
+X0:			DW 0
+Y0:			DW 0
+X1:			DW 0
+Y1:			DW 0
+X2:			DW 0
+Y2:			DW 0
+X3:			DW 0
+Y3:			DW 0
+X4:			DW 0
+Y4:			DW 0
+X5:			DW 0
+Y5:			DW 0
+X6:			DW 0
+Y6:			DW 0
+X7:			DW 0
+Y7:			DW 0
+X8:			DW 0
+Y8:			DW 0
+X9:			DW 0
+Y9:			DW 0
+X10:		DW 0
+Y10:		DW 0
+X11:		DW 0
+Y11:		DW 0
+X12:		DW 0
+Y12:		DW 0	
 ;***************************************************************
 ;* Variables
 ;***************************************************************
