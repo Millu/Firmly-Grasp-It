@@ -142,8 +142,6 @@ MyTurn:
 ;* is pointing to
 ;***************************************************************
 CurrPos:
-	LOAD InputArr
-	STORE Pointer
 	ILOAD Pointer
 	STORE CurX
 	CALL IncrementPtr
@@ -161,6 +159,9 @@ IncrementPtr:
 	LOAD Pointer
 	ADDI 1
 	STORE Pointer
+	LOAD EndCount
+	ADDI 1
+	STORE EndCount
 	Return
 
 
@@ -939,6 +940,7 @@ X11:		DW 0
 Y11:		DW 0
 X12:		DW 0
 Y12:		DW 0
+EndCount:	DW 0
 ;***************************************************************
 ;* Variables
 ;***************************************************************
