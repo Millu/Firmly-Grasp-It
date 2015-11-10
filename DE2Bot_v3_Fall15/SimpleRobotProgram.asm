@@ -79,30 +79,60 @@ Main: ; "Real" program starts here.
 	; You will probably want to reset the position at the start your project code:
 	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
-	LOAD	-4,  1
+Again:
+	CALL	MoveNext
+	; TODO: @MITCH - Write a check if it has gone to all points
+	JUMP	Again
+	CALL	DIE
 
+MoveNext:
+	; Determines the next destination
+	CALL	CurrPos
+	; Calculates the distance forward to travel
+	LOAD	CurX
+	STORE	L2X
+	LOAD	CurY
+	STORE	L2Y
+	CALL	L2Estimate
+	STORE	MyDist
+	; Calculates the angle to turn
+	LOAD	CurX
+	STORE	AtanX
+	LOAD	CurY
+	STORE	AtanY
+	CALL	Atan2
+	STORE	MyAngle
+	; Actually turns in that direction
+	CALL	MyTurn
+	LOAD	MyAngle
+	ADD		PrevAngle
+	STORE	PrevAngle
+	; Actually moves in that direction
+	CALL	MyMove
+	LOAD	MyDist
+	ADD		PrevDist
+	STORE	PrevDist
+	RETURN
 
-move:
-	LOAD FFast
-	OUT RVELCMD
-	OUT LVELCMD
-	IN RPOS
-	SUB TwoFeet
-	SUB TwoFeet
-	JNEG move
+MyMove:
+	LOAD 	FFast
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist
+	; Subtract how far the vehicle needs to go to get to this point
+	SUB 	MyDist
+	JNEG	MyMove
+	RETURN
 
-
-waitm:
-	LOAD Zero
-	ADD FFast
-	OUT LVELCMD
-	SUB FFast
-	SUB FFast
-	OUT RVELCMD
-	IN THETA
-	ADDI -315
-	JPOS waitm
-	CALL DIE
+MyTurn:
+	LOAD 	FFast
+	OUT 	LVELCMD
+	; Only turn with one wheel so that way it does not mess up RPOS
+	IN 		THETA ; 30, target: 15, previous: 45
+	SUB
+	RETURN
 
 
 
@@ -879,6 +909,8 @@ L2T3: DW 0
 Pointer:	DW 0
 CurX:		DW 0
 CurY:		DW 0
+MyDist:		DW 0
+MyAngle:	DW 0
 
 InputArr:
 X0:			DW 0
