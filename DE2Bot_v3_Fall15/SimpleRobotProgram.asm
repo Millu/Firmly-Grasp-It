@@ -28,7 +28,7 @@ ORG        &H000       ; Jump table is located in mem 0-4
 	JUMP   CTimer_ISR  ; Timer interrupt
 	RETI               ; UART interrupt (unused)
 	RETI               ; Motor stall interrupt (unused)
-	
+
 ;***************************************************************
 ;* Initialization
 ;***************************************************************
@@ -40,7 +40,7 @@ Init:
 	OUT    RVELCMD
 	OUT    SONAREN     ; Disable sonar (optional)
 	OUT    BEEP        ; Stop any beeping
-	
+
 	CALL   SetupI2C    ; Configure the I2C to read the battery voltage
 	CALL   BattCheck   ; Get battery voltage (and end if too low).
 	OUT    LCD         ; Display batt voltage on LCD
@@ -55,7 +55,7 @@ WaitForSafety:
 	SHIFT  8           ; Shift over to LED17
 	OUT    XLEDS       ; LED17 blinks at 2.5Hz (10Hz/4)
 	JUMP   WaitForSafety
-	
+
 WaitForUser:
 	; Wait for user to press PB3
 	IN     TIMER       ; We'll blink the LEDs above PB3
@@ -71,7 +71,7 @@ WaitForUser:
 	LOAD   Zero
 	OUT    XLEDS       ; clear LEDs once ready to continue
 	JUMP   Main
-	
+
 ;***************************************************************
 ;* Main code
 ;***************************************************************
@@ -81,8 +81,8 @@ Main: ; "Real" program starts here.
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
 	LOAD	-4,  1
 
-	
-move:	
+
+move:
 	LOAD FFast
 	OUT RVELCMD
 	OUT LVELCMD
@@ -91,11 +91,11 @@ move:
 	SUB TwoFeet
 	JNEG move
 
-	
-waitm:	
+
+waitm:
 	LOAD Zero
 	ADD FFast
-	OUT LVELCMD 
+	OUT LVELCMD
 	SUB FFast
 	SUB FFast
 	OUT RVELCMD
@@ -103,16 +103,37 @@ waitm:
 	ADDI -315
 	JPOS waitm
 	CALL DIE
-	
-	
-	
+
+
+
 ;***************************************************************
 ;* Set Current Points
+;* Saves your X and Y position that the pointer in inputs
+;* is pointing to
 ;***************************************************************
 CurrPos:
-		
-	
-	
+	LOAD InputArr
+	STORE Pointer
+	ILOAD Pointer
+	STORE CurX
+	CALL IncrementPtr
+	ILOAD Pointer
+	STORE CurY
+	CALL IncrementPtr
+	Return
+
+
+;***************************************************************
+;* Increment Pointer
+;* Moves the pointer down one in the array
+;***************************************************************
+IncrementPtr:
+	LOAD Pointer
+	ADDI 1
+	STORE Pointer
+	Return
+
+
 ; This table is used in example 1.  Remember: DW puts these
 ; values in memory, and since SCOMP has unified memory, it
 ; doesn't much matter where these end up, as long as they don't
@@ -151,7 +172,7 @@ Example1:
 	; Like ILOAD, ISTORE operates on the memory location contained
 	; in a variable.
 	ISTORE Ptr1  ; put the sum in memory at the third table entry
-	
+
 	; To prove that everything worked:
 	LOADI  Table1 ; get the table address fresh
 	ADDI   2     ; increment address to result entry
@@ -160,7 +181,7 @@ Example1:
 	ILOAD  Temp  ; get the table value (3rd entry)
 	OUT    LCD   ; and display it for debugging purposes
 	; 55+72 = 127, or 0x7F
-	
+
 Example2:
 ; Example 2: multiply and divide subroutines.
 ; Included in this file are subroutines for 16-bit
@@ -182,7 +203,7 @@ Example2:
 	; 1003*-1019 = -1022057, or 0xFFF0_6797
 	; Note that just taking the low word would give you
 	; the completely wrong result (0x6797 = 26519).
-	
+
 	; Divide:
 	LOADI  1003
 	SHIFT  3
@@ -196,14 +217,14 @@ Example2:
 	LOAD   dres16sR ; remainder of division
 	OUT    XLEDs
 	; 8358/-29 = -288 R6 = 0b1111111011100000 R0b0110
-	
-	
+
+
 	; wait here for a few seconds so you can see the results.
 	; you can also reset, if you want to re-run examples 1 & 2
 	LOADI  30       ; wait 3 seconds
 	CALL   WaitAC
-	
-Example3: 
+
+Example3:
 ; Example 3: Angle and distance calculations
 ; Once SCOMP enters this piece of code, you should roll it around
 ; the floor.  The angle from (0,0) to the current position will
@@ -235,7 +256,7 @@ E3Loop:
 	OUT    SSEG1
 	CALL   L2Estimate ; estimate the distance
 	OUT    SSEG2
-	
+
 	SUB    TwoFeet
 	JPOS   Over2Ft    ; if over 2ft, trip the indicator
 	JUMP   E3Loop     ; repeat forever
@@ -252,7 +273,7 @@ Over2Ft:
 	ADDI   1
 	STORE  TripCount  ; increment the counter
 	LOAD   NegOne
-	OUT    LEDS       ; display for debug 
+	OUT    LEDS       ; display for debug
 	JUMP   E3Loop     ; repeat forever
 Tripped: DW 0
 TripCount: DW 0
@@ -279,7 +300,7 @@ Forever:
 	JUMP   Forever     ; Do this forever.
 DEAD:      DW &HDEAD   ; Example of a "local variable"
 
-	
+
 ;***************************************************************
 ;* Subroutines
 ;***************************************************************
@@ -303,7 +324,7 @@ WACLoop:
 	JNEG   WACLoop
 	RETURN
 	WaitTime: DW 0     ; "local" variable.
-	
+
 ; This subroutine will get the battery voltage,
 ; and stop program execution if it is too low.
 ; SetupI2C must be executed prior to this.
@@ -335,7 +356,7 @@ DeadBatt:
 	OUT    XLEDS
 	CALL   Wait1       ; 1 second
 	JUMP   DeadBatt    ; repeat forever
-	
+
 ; Subroutine to read the A/D (battery voltage)
 ; Assumes that SetupI2C has been run
 GetBattLvl:
@@ -357,7 +378,7 @@ SetupI2C:
 	OUT    I2C_RDY     ; start the communication
 	CALL   BlockI2C    ; wait for it to finish
 	RETURN
-	
+
 ; Subroutine to block until I2C device is idle
 BlockI2C:
 	LOAD   Zero
@@ -449,7 +470,7 @@ IndicateDest:
 	RETURN
 	IDNumber: DW 0
 	IDFlag: DW 0
-	
+
 
 ; Timer interrupt, used to send position data to the server
 CTimer_ISR:
@@ -526,10 +547,10 @@ A2_R1n: ; region 1 negative
 	ADDI   360          ; Add 360 if we are in octant 8
 	RETURN
 A2_R3: ; region 3
-	CALL   A2_calc      ; Octants 4, 5            
+	CALL   A2_calc      ; Octants 4, 5
 	ADDI   180          ; theta' = theta + 180
 	RETURN
-A2_sw: ; switch arguments; octants 2, 3, 6, 7 
+A2_sw: ; switch arguments; octants 2, 3, 6, 7
 	LOAD   AtanY        ; Swap input arguments
 	STORE  AtanT
 	LOAD   AtanX
@@ -642,10 +663,10 @@ Mult16s:
 	STORE  mres16sH     ; clear result
 	LOADI  16           ; load 16 to counter
 Mult16s_loop:
-	STORE  mcnt16s      
+	STORE  mcnt16s
 	LOAD   m16sc        ; check the carry (from previous iteration)
 	JZERO  Mult16s_noc  ; if no carry, move on
-	LOAD   mres16sH     ; if a carry, 
+	LOAD   mres16sH     ; if a carry,
 	ADD    m16sA        ;  add multiplicand to result H
 	STORE  mres16sH
 Mult16s_noc: ; no carry
@@ -746,7 +767,7 @@ Div16s_neg:
 	XOR    NegOne
 	ADDI   1
 	STORE  dres16sQ
-	RETURN	
+	RETURN
 d16sN: DW 0 ; numerator
 d16sD: DW 0 ; denominator
 d16sS: DW 0 ; sign value
@@ -772,7 +793,7 @@ Abs_r:
 ; Mod180: modulo 180
 ; Returns AC%180 in AC
 ; Written by Kevin Johnson.  No licence or copyright applied.
-;*******************************************************************************	
+;*******************************************************************************
 Mod180:
 	JNEG   Mod180n      ; handle negatives
 Mod180p:
@@ -785,7 +806,7 @@ Mod180n:
 	JNEG   Mod180n
 	ADDI   -180         ; go back negative
 	RETURN
-	
+
 ;*******************************************************************************
 ; L2Estimate:  Pythagorean distance estimation
 ; Written by Kevin Johnson.  No licence or copyright applied.
@@ -855,9 +876,11 @@ L2T3: DW 0
 ;***************************************************************
 ;* Inputs
 ;***************************************************************
-Pointer:	DW &H500
+Pointer:	DW 0
+CurX:		DW 0
+CurY:		DW 0
 
-ORG &H500
+InputArr:
 X0:			DW 0
 Y0:			DW 0
 X1:			DW 0
@@ -883,7 +906,7 @@ Y10:		DW 0
 X11:		DW 0
 Y11:		DW 0
 X12:		DW 0
-Y12:		DW 0	
+Y12:		DW 0
 ;***************************************************************
 ;* Variables
 ;***************************************************************
