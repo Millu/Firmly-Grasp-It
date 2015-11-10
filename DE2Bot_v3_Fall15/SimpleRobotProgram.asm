@@ -79,11 +79,20 @@ Main: ; "Real" program starts here.
 	; You will probably want to reset the position at the start your project code:
 	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
+	LOADI	InputArr
+	ADDI	1
+	STORE	Pointer
 Again:
 	CALL	MoveNext
-	; TODO: @MITCH - Write a check if it has gone to all points
-	JUMP	Again
+	LOAD	EndCount
+	ADDI	-24
+	JNEG	Again
 	CALL	DIE
+
+;***************************************************************
+;* Advances the robot towards the next point
+;***************************************************************
+
 
 MoveNext:
 	; Determines the next destination
@@ -102,18 +111,21 @@ MoveNext:
 	STORE	AtanY
 	CALL	Atan2
 	STORE	MyAngle
-	; Actually turns in that direction
+	; Physically turns in that direction
 	CALL	MyTurn
 	LOAD	MyAngle
 	ADD		PrevAngle
 	STORE	PrevAngle
-	; Actually moves in that direction
+	; Physically moves in that direction
 	CALL	MyMove
 	LOAD	MyDist
 	ADD		PrevDist
 	STORE	PrevDist
 	RETURN
 
+;***************************************************************
+;* Tells the robot to move forward until it has advanced the length of MyDist
+;***************************************************************
 MyMove:
 	LOAD 	FFast
 	OUT 	RVELCMD
@@ -126,6 +138,9 @@ MyMove:
 	JNEG	MyMove
 	RETURN
 
+;***************************************************************
+;* Tells the robot to turn until it has approached the angle of MyAngle
+;***************************************************************
 MyTurn:
 	LOAD 	FFast
 	OUT 	LVELCMD
