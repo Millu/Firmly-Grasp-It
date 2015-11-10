@@ -97,30 +97,34 @@ Again:
 MoveNext:
 	; Determines the next destination
 	CALL	CurrPos
-	; Calculates the distance forward to travel
+	; Calculates the 2-d vector to travel in
 	LOAD	CurX
+	SUB		PrevX
 	STORE	L2X
+	STORE	AtanX
 	LOAD	CurY
+	SUB		PrevY
 	STORE	L2Y
+	STORE	AtanY
+	; Calculates the distance to move
 	CALL	L2Estimate
 	STORE	MyDist
 	; Calculates the angle to turn
-	LOAD	CurX
-	STORE	AtanX
-	LOAD	CurY
-	STORE	AtanY
 	CALL	Atan2
 	STORE	MyAngle
 	; Physically turns in that direction
 	CALL	MyTurn
-	LOAD	MyAngle
-	ADD		PrevAngle
+	IN		THETA
 	STORE	PrevAngle
 	; Physically moves in that direction
 	CALL	MyMove
-	LOAD	MyDist
-	ADD		PrevDist
+	IN		RPOS
 	STORE	PrevDist
+	; Update old position variables
+	LOAD	CurX
+	STORE	PrevX
+	LOAD	CurY
+	STORE	PrevY
 	RETURN
 
 ;***************************************************************
