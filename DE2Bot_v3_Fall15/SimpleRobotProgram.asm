@@ -146,8 +146,7 @@ MyMove:
 ;* Tells the robot to turn back to the zero angle
 ;***************************************************************
 RevertAngle:
-	LOAD	Zero
-	SUB 	FFast
+	LOAD	RFast
 	OUT 	LVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
@@ -158,8 +157,7 @@ RevertAngle:
 ;* Tells the robot to turn until it has approached the angle of MyAngle
 ;***************************************************************
 MyTurn:
-	LOAD	Zero
-	SUB 	FFast
+	LOAD	RFast
 	OUT 	LVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
