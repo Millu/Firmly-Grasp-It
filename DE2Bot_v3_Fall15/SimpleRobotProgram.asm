@@ -99,9 +99,9 @@ NickSet:
 	STORE	PrevY
 	STORE	PrevAngle
 	STORE	PrevDist
-	STORE	EndCount	
+	STORE	EndCount
 	RETURN
-	
+
 ;***************************************************************
 ;* Advances the robot towards the next point
 ;***************************************************************
@@ -141,6 +141,51 @@ MoveNext:
 	RETURN
 
 ;***************************************************************
+;* Advances the robot towards the next point in 90 degree
+;* turns
+;***************************************************************
+MoveNextSegment:
+	CALL   CurrPos
+	LOAD   CurX
+	LOAD   PrevX
+	STORE  L2X
+	IN     THETA
+	SUB    NINETY
+	JPOS   FACE180
+	JUMP   FACE0
+
+FACE0:
+	LOAD   L2X
+	JPOS   MoveFor
+	JUMP   MoveBackwards
+
+FACE180:
+	LOAD   L2X
+	JNEG   MoveFor
+	JUMP   MoveBackwards
+
+MoveFor:
+	LOAD  CurX
+	STORE MyDist
+	LOAD  PrevX
+	STORE PrevDist
+	CALL MyMove
+	Return
+
+MoveBackwards:
+	LOAD  CurX
+	STORE MyDist
+	LOAD  PrevX
+	STORE PrevDist
+	CALL  MyMoveBack
+	Return
+
+
+;***************************************************************
+;* Move to the next X which is in a positive direction
+;***************************************************************
+
+;***************************************************************
 ;* Tells the robot to move forward until it has advanced the length of MyDist
 ;***************************************************************
 MyMove:
@@ -154,6 +199,22 @@ MyMove:
 	SUB 	MyDist
 	JNEG	MyMove
 	RETURN
+
+;***************************************************************
+;* Tells the robot to move forward until it has advanced the length of MyDist
+;***************************************************************
+MyMoveBack:
+	LOAD 	FFast
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist
+	; Subtract how far the vehicle needs to go to get to this point
+	SUB 	MyDist
+	JNEG	MyMove
+	RETURN
+
 ;***************************************************************
 ;* Tells the robot to turn back to the zero angle
 ;***************************************************************
