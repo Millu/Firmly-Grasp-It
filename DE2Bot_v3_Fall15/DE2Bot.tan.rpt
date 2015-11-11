@@ -1,6 +1,6 @@
 Classic Timing Analyzer report for DE2Bot
-Tue Oct 27 19:56:38 2015
-Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
+Tue Nov 10 19:16:14 2015
+Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Web Edition
 
 
 ---------------------
@@ -127,21 +127,15 @@ applicable agreement for further details.
 +----------------------------------------------+--------------------+------------+------------------+---------------+--------------+----------+-----------------------+---------------------+--------+--------------+
 
 
-+------------------------------------------+
-; Parallel Compilation                     ;
-+----------------------------+-------------+
-; Processors                 ; Number      ;
-+----------------------------+-------------+
-; Number detected on machine ; 2           ;
-; Maximum allowed            ; 2           ;
-;                            ;             ;
-; Average used               ; 1.00        ;
-; Maximum used               ; 1           ;
-;                            ;             ;
-; Usage by Processor         ; % Time Used ;
-;     1 processor            ; 100.0%      ;
-;     2 processors           ;   0.0%      ;
-+----------------------------+-------------+
+Parallel compilation was disabled, but you have multiple processors available. Enable parallel compilation to reduce compilation time.
++-------------------------------------+
+; Parallel Compilation                ;
++----------------------------+--------+
+; Processors                 ; Number ;
++----------------------------+--------+
+; Number detected on machine ; 4      ;
+; Maximum allowed            ; 1      ;
++----------------------------+--------+
 
 
 +---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2547,10 +2541,9 @@ applicable agreement for further details.
 +--------------------------+
 Info: *******************************************************************
 Info: Running Quartus II Classic Timing Analyzer
-    Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
-    Info: Processing started: Tue Oct 27 19:56:34 2015
+    Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Web Edition
+    Info: Processing started: Tue Nov 10 19:16:11 2015
 Info: Command: quartus_tan --read_settings_files=off --write_settings_files=off DE2Bot -c DE2Bot --timing_analysis_only
-Info: Parallel compilation is enabled and will use 2 of the 2 processors detected
 Warning: Found pins functioning as undefined clocks and/or memory enables
     Info: Assuming node "SW[17]" is an undefined clock
     Info: Assuming node "AUD_DACLR" is an undefined clock
@@ -3133,9 +3126,9 @@ Info: th for register "DIG_IN:inst5|B_DI[10]" (data pin = "SW[10]", clock pin = 
         Info: Total interconnect delay = 1.450 ns ( 51.51 % )
 Critical Warning: Timing requirements for slow timing model timing analysis were not met. See Report window for details.
 Info: Quartus II Classic Timing Analyzer was successful. 0 errors, 6 warnings
-    Info: Peak virtual memory: 215 megabytes
-    Info: Processing ended: Tue Oct 27 19:56:38 2015
-    Info: Elapsed time: 00:00:04
-    Info: Total CPU time (on all processors): 00:00:04
+    Info: Peak virtual memory: 223 megabytes
+    Info: Processing ended: Tue Nov 10 19:16:14 2015
+    Info: Elapsed time: 00:00:03
+    Info: Total CPU time (on all processors): 00:00:03
 
 

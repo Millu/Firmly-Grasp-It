@@ -80,20 +80,31 @@ Main: ; "Real" program starts here.
 	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
 	LOADI	InputArr
-	ADDI	1
+	; ADDI	1
 	STORE	Pointer
 Again:
 	CALL	MoveNext
 	LOAD	EndCount
 	ADDI	-24
-	JNEG	Again
+	; JNEG	Again
+	CALL	NickSet
 	CALL	DIE
 
 ;***************************************************************
 ;* Advances the robot towards the next point
 ;***************************************************************
-
-
+NickSet:
+	LOAD	Zero
+	STORE	PrevX
+	STORE	PrevY
+	STORE	PrevAngle
+	STORE	PrevDist
+	STORE	EndCount	
+	RETURN
+	
+;***************************************************************
+;* Advances the robot towards the next point
+;***************************************************************
 MoveNext:
 	; Determines the next destination
 	CALL	CurrPos
@@ -112,13 +123,14 @@ MoveNext:
 	; Calculates the angle to turn
 	CALL	Atan2
 	STORE	MyAngle
+	OUT		LCD
 	; Physically turns in that direction
 	CALL	RevertAngle
 	CALL	MyTurn
 	IN		THETA
 	STORE	PrevAngle
 	; Physically moves in that direction
-	CALL	MyMove
+	; CALL	MyMove
 	IN		RPOS
 	STORE	PrevDist
 	; Update old position variables
@@ -152,6 +164,8 @@ RevertAngle:
 	IN 		THETA
 	; Orient to zero
 	JPOS	MyTurn
+	LOAD	Zero
+	OUT 	LVELCMD
 	RETURN
 ;***************************************************************
 ;* Tells the robot to turn until it has approached the angle of MyAngle
@@ -163,6 +177,8 @@ MyTurn:
 	IN 		THETA
 	SUB		MyAngle
 	JNEG	MyTurn
+	LOAD	Zero
+	OUT 	LVELCMD
 	RETURN
 
 
@@ -973,8 +989,6 @@ X10:		DW 0
 Y10:		DW 0
 X11:		DW 0
 Y11:		DW 0
-X12:		DW 0
-Y12:		DW 0
 EndCount:	DW 0
 ;***************************************************************
 ;* Variables

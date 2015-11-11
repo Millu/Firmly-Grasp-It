@@ -1,6 +1,6 @@
 Analysis & Synthesis report for DE2Bot
-Tue Oct 27 19:55:41 2015
-Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
+Tue Nov 10 19:15:35 2015
+Quartus II Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Web Edition
 
 
 ---------------------
@@ -157,24 +157,24 @@ applicable agreement for further details.
 
 
 
-+------------------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                                       ;
-+------------------------------------+-----------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Oct 27 19:55:41 2015         ;
-; Quartus II Version                 ; 9.1 Build 350 03/24/2010 SP 2 SJ Full Version ;
-; Revision Name                      ; DE2Bot                                        ;
-; Top-level Entity Name              ; DE2bot                                        ;
-; Family                             ; Cyclone II                                    ;
-; Total logic elements               ; 4,898                                         ;
-;     Total combinational functions  ; 4,220                                         ;
-;     Dedicated logic registers      ; 2,060                                         ;
-; Total registers                    ; 2060                                          ;
-; Total pins                         ; 182                                           ;
-; Total virtual pins                 ; 0                                             ;
-; Total memory bits                  ; 107,136                                       ;
-; Embedded Multiplier 9-bit elements ; 42                                            ;
-; Total PLLs                         ; 2                                             ;
-+------------------------------------+-----------------------------------------------+
++-----------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                      ;
++------------------------------------+----------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Tue Nov 10 19:15:35 2015        ;
+; Quartus II Version                 ; 9.1 Build 350 03/24/2010 SP 2 SJ Web Edition ;
+; Revision Name                      ; DE2Bot                                       ;
+; Top-level Entity Name              ; DE2bot                                       ;
+; Family                             ; Cyclone II                                   ;
+; Total logic elements               ; 4,898                                        ;
+;     Total combinational functions  ; 4,220                                        ;
+;     Dedicated logic registers      ; 2,060                                        ;
+; Total registers                    ; 2060                                         ;
+; Total pins                         ; 182                                          ;
+; Total virtual pins                 ; 0                                            ;
+; Total memory bits                  ; 107,136                                      ;
+; Embedded Multiplier 9-bit elements ; 42                                           ;
+; Total PLLs                         ; 2                                            ;
++------------------------------------+----------------------------------------------+
 
 
 +----------------------------------------------------------------------------------------------------------------------+
@@ -256,142 +256,136 @@ applicable agreement for further details.
 +----------------------------------------------------------------------------+--------------------+--------------------+
 
 
-+------------------------------------------+
-; Parallel Compilation                     ;
-+----------------------------+-------------+
-; Processors                 ; Number      ;
-+----------------------------+-------------+
-; Number detected on machine ; 2           ;
-; Maximum allowed            ; 2           ;
-;                            ;             ;
-; Average used               ; 1.00        ;
-; Maximum used               ; 1           ;
-;                            ;             ;
-; Usage by Processor         ; % Time Used ;
-;     1 processor            ; 100.0%      ;
-;     2 processors           ;   0.0%      ;
-+----------------------------+-------------+
+Parallel compilation was disabled, but you have multiple processors available. Enable parallel compilation to reduce compilation time.
++-------------------------------------+
+; Parallel Compilation                ;
++----------------------------+--------+
+; Processors                 ; Number ;
++----------------------------+--------+
+; Number detected on machine ; 4      ;
+; Maximum allowed            ; 1      ;
++----------------------------+--------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                      ;
-+----------------------------------+-----------------+----------------------------------------+-------------------------------------------------------------------------------+
-; File Name with User-Entered Path ; Used in Netlist ; File Type                              ; File Name with Absolute Path                                                  ;
-+----------------------------------+-----------------+----------------------------------------+-------------------------------------------------------------------------------+
-; acc_clk_gen.vhd                  ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/acc_clk_gen.vhd           ;
-; altpll0.vhd                      ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/altpll0.vhd               ;
-; altpll1.vhd                      ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/altpll1.vhd               ;
-; altsyncram_db0.vhd               ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/altsyncram_db0.vhd        ;
-; DAC_BEEP.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/DAC_BEEP.bdf              ;
-; DE2bot.bdf                       ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/DE2bot.bdf                ;
-; DIG_IN.vhd                       ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/DIG_IN.vhd                ;
-; HEX_DISP.vhd                     ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/HEX_DISP.vhd              ;
-; i2c_ctrl.vhd                     ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/i2c_ctrl.vhd              ;
-; I2C_INTERFACE.bdf                ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/I2C_INTERFACE.bdf         ;
-; i2c_master.vhd                   ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/i2c_master.vhd            ;
-; i2c_oneshot_ctrl.vhd             ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/i2c_oneshot_ctrl.vhd      ;
-; IO_DECODER.vhd                   ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/IO_DECODER.vhd            ;
-; LEDS.vhd                         ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/LEDS.vhd                  ;
-; lpm_add_sub_db0.vhd              ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_add_sub_db0.vhd       ;
-; lpm_add_sub_oe0.vhd              ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_add_sub_oe0.vhd       ;
-; lpm_bustri_oe0.vhd               ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_bustri_oe0.vhd        ;
-; lpm_bustri_uart0.vhd             ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_bustri_uart0.vhd      ;
-; lpm_constant_oe0.vhd             ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_constant_oe0.vhd      ;
-; lpm_counter_oe0.vhd              ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_counter_oe0.vhd       ;
-; lpm_dff_db0.vhd                  ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_dff_db0.vhd           ;
-; lpm_dff_db1.vhd                  ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_dff_db1.vhd           ;
-; lpm_dff_oe0.vhd                  ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_dff_oe0.vhd           ;
-; lpm_dff_uart0.vhd                ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_dff_uart0.vhd         ;
-; lpm_mult_oe0.vhd                 ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_mult_oe0.vhd          ;
-; lpm_shiftreg_db0.vhd             ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/lpm_shiftreg_db0.vhd      ;
-; ODOMETRY.vhd                     ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/ODOMETRY.vhd              ;
-; oneshot_i2c.bdf                  ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/oneshot_i2c.bdf           ;
-; OPTICAL_ENCODER.bdf              ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/OPTICAL_ENCODER.bdf       ;
-; POSN_VEL.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/POSN_VEL.bdf              ;
-; QUAD_HEX.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/QUAD_HEX.bdf              ;
-; QUADRATURE_DECODE.bdf            ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/QUADRATURE_DECODE.bdf     ;
-; SAFETY_ENABLE.bdf                ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/SAFETY_ENABLE.bdf         ;
-; SCOMP.vhd                        ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/SCOMP.vhd                 ;
-; SLCD.vhd                         ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/SLCD.vhd                  ;
-; SONAR.vhd                        ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/SONAR.vhd                 ;
-; TIMER.vhd                        ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/TIMER.vhd                 ;
-; uart.vhd                         ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/uart.vhd                  ;
-; uart_dcfifo_in.vhd               ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/uart_dcfifo_in.vhd        ;
-; uart_dcfifo_out.vhd              ; yes             ; User Wizard-Generated File             ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/uart_dcfifo_out.vhd       ;
-; UART_INTERFACE.bdf               ; yes             ; User Block Diagram/Schematic File      ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/UART_INTERFACE.bdf        ;
-; VEL_CONTROL.vhd                  ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/VEL_CONTROL.vhd           ;
-; UART_LIMITER.vhd                 ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/UART_LIMITER.vhd          ;
-; CTIMER.vhd                       ; yes             ; User VHDL File                         ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/CTIMER.vhd                ;
-; altpll.tdf                       ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/altpll.tdf                  ;
-; altsyncram.tdf                   ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/altsyncram.tdf              ;
-; db/altsyncram_scu3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_scu3.tdf    ;
-; SimpleRobotProgram.mif           ; yes             ; Auto-Found Memory Initialization File  ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/SimpleRobotProgram.mif    ;
-; lpm_clshift.tdf                  ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_clshift.tdf             ;
-; db/lpm_clshift_fuc.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/lpm_clshift_fuc.tdf    ;
-; lpm_bustri.tdf                   ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_bustri.tdf              ;
-; lpm_add_sub.tdf                  ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_add_sub.tdf             ;
-; db/add_sub_nfh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_nfh.tdf        ;
-; lpm_ff.tdf                       ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_ff.tdf                  ;
-; lpm_counter.tdf                  ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_counter.tdf             ;
-; db/cntr_mrg.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cntr_mrg.tdf           ;
-; lpm_mult.tdf                     ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_mult.tdf                ;
-; db/mult_j2n.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_j2n.tdf           ;
-; lpm_constant.tdf                 ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_constant.tdf            ;
-; db/altsyncram_06l3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_06l3.tdf    ;
-; sin_table.mif                    ; yes             ; Auto-Found Memory Initialization File  ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/sin_table.mif             ;
-; db/altsyncram_r5l3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_r5l3.tdf    ;
-; cos_table.mif                    ; yes             ; Auto-Found Memory Initialization File  ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/cos_table.mif             ;
-; db/mult_h3o.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_h3o.tdf           ;
-; multcore.tdf                     ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/multcore.tdf                ;
-; mpar_add.tdf                     ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/mpar_add.tdf                ;
-; db/add_sub_5ch.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_5ch.tdf        ;
-; db/add_sub_9ch.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_9ch.tdf        ;
-; altshift.tdf                     ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/altshift.tdf                ;
-; dcfifo.tdf                       ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/dcfifo.tdf                  ;
-; db/dcfifo_qtl1.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dcfifo_qtl1.tdf        ;
-; db/a_graycounter_c86.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_c86.tdf  ;
-; db/a_graycounter_3fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_3fc.tdf  ;
-; db/a_graycounter_2fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_2fc.tdf  ;
-; db/altsyncram_7hu.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_7hu.tdf     ;
-; db/dffpipe_ngh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_ngh.tdf        ;
-; db/alt_synch_pipe_fcb.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/alt_synch_pipe_fcb.tdf ;
-; db/dffpipe_dd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_dd9.tdf        ;
-; db/alt_synch_pipe_jc8.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/alt_synch_pipe_jc8.tdf ;
-; db/dffpipe_ed9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_ed9.tdf        ;
-; db/cmpr_n16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cmpr_n16.tdf           ;
-; db/cmpr_m16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cmpr_m16.tdf           ;
-; db/mux_1u7.tdf                   ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mux_1u7.tdf            ;
-; db/dcfifo_31m1.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dcfifo_31m1.tdf        ;
-; db/a_gray2bin_acb.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_gray2bin_acb.tdf     ;
-; db/a_graycounter_e86.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_e86.tdf  ;
-; db/a_graycounter_5fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_5fc.tdf  ;
-; db/a_graycounter_4fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/a_graycounter_4fc.tdf  ;
-; db/altsyncram_bhu.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_bhu.tdf     ;
-; db/dffpipe_adc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_adc.tdf        ;
-; db/alt_synch_pipe_hcb.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/alt_synch_pipe_hcb.tdf ;
-; db/dffpipe_fd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_fd9.tdf        ;
-; db/alt_synch_pipe_lc8.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/alt_synch_pipe_lc8.tdf ;
-; db/dffpipe_gd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/dffpipe_gd9.tdf        ;
-; db/cmpr_o16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cmpr_o16.tdf           ;
-; db/cntr_gkj.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cntr_gkj.tdf           ;
-; lpm_compare.tdf                  ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_compare.tdf             ;
-; db/cmpr_a2i.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/cmpr_a2i.tdf           ;
-; lpm_shiftreg.tdf                 ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_shiftreg.tdf            ;
-; db/altsyncram_koa1.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/altsyncram_koa1.tdf    ;
-; sound.mif                        ; yes             ; Auto-Found Memory Initialization File  ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/sound.mif                 ;
-; db/add_sub_dkh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_dkh.tdf        ;
-; db/mult_m3t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_m3t.tdf           ;
-; db/mult_45t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_45t.tdf           ;
-; db/mult_q3t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_q3t.tdf           ;
-; lpm_divide.tdf                   ; yes             ; Megafunction                           ; c:/appl/altera/91/quartus/libraries/megafunctions/lpm_divide.tdf              ;
-; db/lpm_divide_ulo.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/lpm_divide_ulo.tdf     ;
-; db/abs_divider_8dg.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/abs_divider_8dg.tdf    ;
-; db/alt_u_div_s5f.tdf             ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/alt_u_div_s5f.tdf      ;
-; db/add_sub_lkc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_lkc.tdf        ;
-; db/add_sub_mkc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/add_sub_mkc.tdf        ;
-; db/lpm_abs_2s9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/lpm_abs_2s9.tdf        ;
-; db/mult_25t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/startofProject/DE2Bot_v3_Fall15/DE2Bot_v3_Fall15/db/mult_25t.tdf           ;
-+----------------------------------+-----------------+----------------------------------------+-------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                           ;
++----------------------------------+-----------------+----------------------------------------+------------------------------------------------------------------------------------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type                              ; File Name with Absolute Path                                                       ;
++----------------------------------+-----------------+----------------------------------------+------------------------------------------------------------------------------------+
+; acc_clk_gen.vhd                  ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/acc_clk_gen.vhd           ;
+; altpll0.vhd                      ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/altpll0.vhd               ;
+; altpll1.vhd                      ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/altpll1.vhd               ;
+; altsyncram_db0.vhd               ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/altsyncram_db0.vhd        ;
+; DAC_BEEP.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/DAC_BEEP.bdf              ;
+; DE2bot.bdf                       ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/DE2bot.bdf                ;
+; DIG_IN.vhd                       ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/DIG_IN.vhd                ;
+; HEX_DISP.vhd                     ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/HEX_DISP.vhd              ;
+; i2c_ctrl.vhd                     ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/i2c_ctrl.vhd              ;
+; I2C_INTERFACE.bdf                ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/I2C_INTERFACE.bdf         ;
+; i2c_master.vhd                   ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/i2c_master.vhd            ;
+; i2c_oneshot_ctrl.vhd             ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/i2c_oneshot_ctrl.vhd      ;
+; IO_DECODER.vhd                   ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/IO_DECODER.vhd            ;
+; LEDS.vhd                         ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/LEDS.vhd                  ;
+; lpm_add_sub_db0.vhd              ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_add_sub_db0.vhd       ;
+; lpm_add_sub_oe0.vhd              ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_add_sub_oe0.vhd       ;
+; lpm_bustri_oe0.vhd               ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_bustri_oe0.vhd        ;
+; lpm_bustri_uart0.vhd             ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_bustri_uart0.vhd      ;
+; lpm_constant_oe0.vhd             ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_constant_oe0.vhd      ;
+; lpm_counter_oe0.vhd              ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_counter_oe0.vhd       ;
+; lpm_dff_db0.vhd                  ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_dff_db0.vhd           ;
+; lpm_dff_db1.vhd                  ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_dff_db1.vhd           ;
+; lpm_dff_oe0.vhd                  ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_dff_oe0.vhd           ;
+; lpm_dff_uart0.vhd                ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_dff_uart0.vhd         ;
+; lpm_mult_oe0.vhd                 ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_mult_oe0.vhd          ;
+; lpm_shiftreg_db0.vhd             ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/lpm_shiftreg_db0.vhd      ;
+; ODOMETRY.vhd                     ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/ODOMETRY.vhd              ;
+; oneshot_i2c.bdf                  ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/oneshot_i2c.bdf           ;
+; OPTICAL_ENCODER.bdf              ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/OPTICAL_ENCODER.bdf       ;
+; POSN_VEL.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/POSN_VEL.bdf              ;
+; QUAD_HEX.bdf                     ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/QUAD_HEX.bdf              ;
+; QUADRATURE_DECODE.bdf            ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/QUADRATURE_DECODE.bdf     ;
+; SAFETY_ENABLE.bdf                ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SAFETY_ENABLE.bdf         ;
+; SCOMP.vhd                        ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SCOMP.vhd                 ;
+; SLCD.vhd                         ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SLCD.vhd                  ;
+; SONAR.vhd                        ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SONAR.vhd                 ;
+; TIMER.vhd                        ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/TIMER.vhd                 ;
+; uart.vhd                         ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/uart.vhd                  ;
+; uart_dcfifo_in.vhd               ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/uart_dcfifo_in.vhd        ;
+; uart_dcfifo_out.vhd              ; yes             ; User Wizard-Generated File             ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/uart_dcfifo_out.vhd       ;
+; UART_INTERFACE.bdf               ; yes             ; User Block Diagram/Schematic File      ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/UART_INTERFACE.bdf        ;
+; VEL_CONTROL.vhd                  ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/VEL_CONTROL.vhd           ;
+; UART_LIMITER.vhd                 ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/UART_LIMITER.vhd          ;
+; CTIMER.vhd                       ; yes             ; User VHDL File                         ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/CTIMER.vhd                ;
+; altpll.tdf                       ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/altpll.tdf                         ;
+; altsyncram.tdf                   ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/altsyncram.tdf                     ;
+; db/altsyncram_scu3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_scu3.tdf    ;
+; SimpleRobotProgram.mif           ; yes             ; Auto-Found Memory Initialization File  ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SimpleRobotProgram.mif    ;
+; lpm_clshift.tdf                  ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_clshift.tdf                    ;
+; db/lpm_clshift_fuc.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/lpm_clshift_fuc.tdf    ;
+; lpm_bustri.tdf                   ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_bustri.tdf                     ;
+; lpm_add_sub.tdf                  ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_add_sub.tdf                    ;
+; db/add_sub_nfh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_nfh.tdf        ;
+; lpm_ff.tdf                       ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_ff.tdf                         ;
+; lpm_counter.tdf                  ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_counter.tdf                    ;
+; db/cntr_mrg.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cntr_mrg.tdf           ;
+; lpm_mult.tdf                     ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_mult.tdf                       ;
+; db/mult_j2n.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_j2n.tdf           ;
+; lpm_constant.tdf                 ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_constant.tdf                   ;
+; db/altsyncram_06l3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_06l3.tdf    ;
+; SIN_table.mif                    ; yes             ; Auto-Found Memory Initialization File  ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SIN_table.mif             ;
+; db/altsyncram_r5l3.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_r5l3.tdf    ;
+; COS_table.mif                    ; yes             ; Auto-Found Memory Initialization File  ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/COS_table.mif             ;
+; db/mult_h3o.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_h3o.tdf           ;
+; multcore.tdf                     ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/multcore.tdf                       ;
+; mpar_add.tdf                     ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/mpar_add.tdf                       ;
+; db/add_sub_5ch.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_5ch.tdf        ;
+; db/add_sub_9ch.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_9ch.tdf        ;
+; altshift.tdf                     ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/altshift.tdf                       ;
+; dcfifo.tdf                       ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/dcfifo.tdf                         ;
+; db/dcfifo_qtl1.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dcfifo_qtl1.tdf        ;
+; db/a_graycounter_c86.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_c86.tdf  ;
+; db/a_graycounter_3fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_3fc.tdf  ;
+; db/a_graycounter_2fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_2fc.tdf  ;
+; db/altsyncram_7hu.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_7hu.tdf     ;
+; db/dffpipe_ngh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_ngh.tdf        ;
+; db/alt_synch_pipe_fcb.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/alt_synch_pipe_fcb.tdf ;
+; db/dffpipe_dd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_dd9.tdf        ;
+; db/alt_synch_pipe_jc8.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/alt_synch_pipe_jc8.tdf ;
+; db/dffpipe_ed9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_ed9.tdf        ;
+; db/cmpr_n16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cmpr_n16.tdf           ;
+; db/cmpr_m16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cmpr_m16.tdf           ;
+; db/mux_1u7.tdf                   ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mux_1u7.tdf            ;
+; db/dcfifo_31m1.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dcfifo_31m1.tdf        ;
+; db/a_gray2bin_acb.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_gray2bin_acb.tdf     ;
+; db/a_graycounter_e86.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_e86.tdf  ;
+; db/a_graycounter_5fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_5fc.tdf  ;
+; db/a_graycounter_4fc.tdf         ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/a_graycounter_4fc.tdf  ;
+; db/altsyncram_bhu.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_bhu.tdf     ;
+; db/dffpipe_adc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_adc.tdf        ;
+; db/alt_synch_pipe_hcb.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/alt_synch_pipe_hcb.tdf ;
+; db/dffpipe_fd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_fd9.tdf        ;
+; db/alt_synch_pipe_lc8.tdf        ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/alt_synch_pipe_lc8.tdf ;
+; db/dffpipe_gd9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/dffpipe_gd9.tdf        ;
+; db/cmpr_o16.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cmpr_o16.tdf           ;
+; db/cntr_gkj.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cntr_gkj.tdf           ;
+; lpm_compare.tdf                  ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_compare.tdf                    ;
+; db/cmpr_a2i.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/cmpr_a2i.tdf           ;
+; lpm_shiftreg.tdf                 ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_shiftreg.tdf                   ;
+; db/altsyncram_koa1.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/altsyncram_koa1.tdf    ;
+; SOUND.mif                        ; yes             ; Auto-Found Memory Initialization File  ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/SOUND.mif                 ;
+; db/add_sub_dkh.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_dkh.tdf        ;
+; db/mult_m3t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_m3t.tdf           ;
+; db/mult_45t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_45t.tdf           ;
+; db/mult_q3t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_q3t.tdf           ;
+; lpm_divide.tdf                   ; yes             ; Megafunction                           ; c:/altera/91sp2/quartus/libraries/megafunctions/lpm_divide.tdf                     ;
+; db/lpm_divide_ulo.tdf            ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/lpm_divide_ulo.tdf     ;
+; db/abs_divider_8dg.tdf           ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/abs_divider_8dg.tdf    ;
+; db/alt_u_div_s5f.tdf             ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/alt_u_div_s5f.tdf      ;
+; db/add_sub_lkc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_lkc.tdf        ;
+; db/add_sub_mkc.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/add_sub_mkc.tdf        ;
+; db/lpm_abs_2s9.tdf               ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/lpm_abs_2s9.tdf        ;
+; db/mult_25t.tdf                  ; yes             ; Auto-Generated Megafunction            ; C:/Users/nick/Documents/Firmly-Grasp-It/DE2Bot_v3_Fall15/db/mult_25t.tdf           ;
++----------------------------------+-----------------+----------------------------------------+------------------------------------------------------------------------------------+
 
 
 +--------------------------------------------------------------------------------------------------+
@@ -453,7 +447,7 @@ applicable agreement for further details.
 ;       |i2c_ctrl:inst14|                           ; 60 (60)           ; 70 (70)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|I2C_INTERFACE:inst16|i2c_ctrl:inst14                                                                                                            ;              ;
 ;       |i2c_master:inst|                           ; 98 (98)           ; 55 (55)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|I2C_INTERFACE:inst16|i2c_master:inst                                                                                                            ;              ;
 ;    |IO_DECODER:inst24|                            ; 16 (16)           ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|IO_DECODER:inst24                                                                                                                               ;              ;
-;    |LEDS:inst58|                                  ; 0 (0)             ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|LEDS:inst58                                                                                                                                     ;              ;
+;    |LEDS:inst58|                                  ; 0 (0)             ; 16 (16)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|LEDS:inst58                                                                                                                                     ; work         ;
 ;    |LEDS:inst59|                                  ; 0 (0)             ; 10 (10)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|LEDS:inst59                                                                                                                                     ;              ;
 ;    |ODOMETRY:inst53|                              ; 458 (136)         ; 129 (129)    ; 65536       ; 4            ; 0       ; 2         ; 0    ; 0            ; |DE2bot|ODOMETRY:inst53                                                                                                                                 ;              ;
 ;       |altsyncram:COS_LUT|                        ; 0 (0)             ; 0 (0)        ; 32768       ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|ODOMETRY:inst53|altsyncram:COS_LUT                                                                                                              ;              ;
@@ -514,13 +508,13 @@ applicable agreement for further details.
 ;          |lpm_bustri:lpm_bustri_component|        ; 1 (1)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|OPTICAL_ENCODER:inst27|lpm_bustri_oe0:inst6|lpm_bustri:lpm_bustri_component                                                                     ;              ;
 ;    |QUAD_HEX:inst56|                              ; 28 (0)            ; 16 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56                                                                                                                                 ; work         ;
 ;       |HEX_DISP:inst15|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst15                                                                                                                 ; work         ;
-;       |HEX_DISP:inst21|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst21                                                                                                                 ; work         ;
-;       |HEX_DISP:inst22|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst22                                                                                                                 ;              ;
-;       |HEX_DISP:inst27|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst27                                                                                                                 ; work         ;
+;       |HEX_DISP:inst21|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst21                                                                                                                 ;              ;
+;       |HEX_DISP:inst22|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst22                                                                                                                 ; work         ;
+;       |HEX_DISP:inst27|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst56|HEX_DISP:inst27                                                                                                                 ;              ;
 ;    |QUAD_HEX:inst57|                              ; 28 (0)            ; 16 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57                                                                                                                                 ;              ;
-;       |HEX_DISP:inst15|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst15                                                                                                                 ; work         ;
+;       |HEX_DISP:inst15|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst15                                                                                                                 ;              ;
 ;       |HEX_DISP:inst21|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst21                                                                                                                 ; work         ;
-;       |HEX_DISP:inst22|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst22                                                                                                                 ; work         ;
+;       |HEX_DISP:inst22|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst22                                                                                                                 ;              ;
 ;       |HEX_DISP:inst27|                           ; 7 (7)             ; 4 (4)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|QUAD_HEX:inst57|HEX_DISP:inst27                                                                                                                 ; work         ;
 ;    |SAFETY_ENABLE:inst4|                          ; 1 (1)             ; 2 (2)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|SAFETY_ENABLE:inst4                                                                                                                             ;              ;
 ;    |SCOMP:inst8|                                  ; 519 (438)         ; 226 (226)    ; 32768       ; 0            ; 0       ; 0         ; 0    ; 0            ; |DE2bot|SCOMP:inst8                                                                                                                                     ;              ;
@@ -4196,10 +4190,9 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+
 Info: *******************************************************************
 Info: Running Quartus II Analysis & Synthesis
-    Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Full Version
-    Info: Processing started: Tue Oct 27 19:55:07 2015
+    Info: Version 9.1 Build 350 03/24/2010 Service Pack 2 SJ Web Edition
+    Info: Processing started: Tue Nov 10 19:15:12 2015
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off DE2Bot -c DE2Bot
-Info: Parallel compilation is enabled and will use 2 of the 2 processors detected
 Info: Found 2 design units, including 1 entities, in source file acc_clk_gen.vhd
     Info: Found design unit 1: ACC_CLK_GEN-a
     Info: Found entity 1: ACC_CLK_GEN
@@ -4448,7 +4441,7 @@ Info: Instantiated megafunction "SCOMP:inst8|altsyncram:MEMORY" with the followi
 Info: Found 1 design units, including 1 entities, in source file db/altsyncram_scu3.tdf
     Info: Found entity 1: altsyncram_scu3
 Info: Elaborating entity "altsyncram_scu3" for hierarchy "SCOMP:inst8|altsyncram:MEMORY|altsyncram_scu3:auto_generated"
-Warning: 177 out of 2048 addresses are reinitialized. The latest initialized data will replace the existing data. There are 177 warnings found, and 10 warnings are reported.
+Warning: 672 out of 2048 addresses are reinitialized. The latest initialized data will replace the existing data. There are 672 warnings found, and 10 warnings are reported.
     Warning: Memory Initialization File address 0 is reinitialized
     Warning: Memory Initialization File address 1 is reinitialized
     Warning: Memory Initialization File address 2 is reinitialized
@@ -5316,9 +5309,9 @@ Info: Implemented 5464 device resources after synthesis - the final resource cou
     Info: Implemented 2 PLLs
     Info: Implemented 42 DSP elements
 Info: Quartus II Analysis & Synthesis was successful. 0 errors, 96 warnings
-    Info: Peak virtual memory: 290 megabytes
-    Info: Processing ended: Tue Oct 27 19:55:41 2015
-    Info: Elapsed time: 00:00:34
-    Info: Total CPU time (on all processors): 00:00:34
+    Info: Peak virtual memory: 303 megabytes
+    Info: Processing ended: Tue Nov 10 19:15:35 2015
+    Info: Elapsed time: 00:00:23
+    Info: Total CPU time (on all processors): 00:00:22
 
 
