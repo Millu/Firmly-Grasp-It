@@ -80,13 +80,15 @@ Main: ; "Real" program starts here.
 	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
 	LOADI	InputArr
-	; ADDI	1
 	STORE	Pointer
+	; Test robot turning 90 degrees
+	CALL	Turn90
+	CALL	DIE
 Again:
 	CALL	MoveNext
 	LOAD	EndCount
 	ADDI	-24
-	; JNEG	Again
+	JNEG	Again
 	CALL	NickSet
 	CALL	DIE
 
@@ -181,6 +183,19 @@ MyTurn:
 	OUT 	LVELCMD
 	RETURN
 
+Turn90:
+	LOAD	RFast
+	OUT 	LVELCMD
+	LOAD	FFast
+	OUT		RVELCMD
+	; Only turn with one wheel so that way it does not mess up RPOS
+	IN 		THETA
+	ADDI	-32
+	JNEG	Turn90
+	LOAD	Zero
+	OUT 	LVELCMD
+	OUT		RVELCMD
+	RETURN
 
 
 ;***************************************************************
