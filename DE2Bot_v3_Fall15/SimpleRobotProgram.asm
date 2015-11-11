@@ -937,12 +937,12 @@ PrevDist:	DW 0
 PrevAngle:	DW 0
 
 InputArr:
-X0:			DW 0
-Y0:			DW 0
-X1:			DW 0
-Y1:			DW 0
+X0:			DW 1162
+Y0:			DW 581
+X1:			DW 581
+Y1:			DW 1743
 X2:			DW 0
-Y2:			DW 0
+Y2:			DW -581
 X3:			DW 0
 Y3:			DW 0
 X4:			DW 0
