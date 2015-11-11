@@ -113,6 +113,7 @@ MoveNext:
 	CALL	Atan2
 	STORE	MyAngle
 	; Physically turns in that direction
+	CALL	RevertAngle
 	CALL	MyTurn
 	IN		THETA
 	STORE	PrevAngle
@@ -141,16 +142,29 @@ MyMove:
 	SUB 	MyDist
 	JNEG	MyMove
 	RETURN
-
+;***************************************************************
+;* Tells the robot to turn back to the zero angle
+;***************************************************************
+RevertAngle:
+	LOAD	Zero
+	SUB 	FFast
+	OUT 	LVELCMD
+	; Only turn with one wheel so that way it does not mess up RPOS
+	IN 		THETA
+	; Orient to zero
+	JPOS	MyTurn
+	RETURN
 ;***************************************************************
 ;* Tells the robot to turn until it has approached the angle of MyAngle
 ;***************************************************************
 MyTurn:
-	LOAD 	FFast
+	LOAD	Zero
+	SUB 	FFast
 	OUT 	LVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
-	IN 		THETA ; 30, target: 15, previous: 45
-	SUB
+	IN 		THETA
+	SUB		MyAngle
+	JNEG	MyTurn
 	RETURN
 
 
