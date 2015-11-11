@@ -941,10 +941,14 @@ L2T3: DW 0
 ;* Inputs
 ;***************************************************************
 Pointer:	DW 0
+PrevX:		DW 0
+PrevY:		DW 0
 CurX:		DW 0
 CurY:		DW 0
 MyDist:		DW 0
 MyAngle:	DW 0
+PrevDist:	DW 0
+PrevAngle:	DW 0
 
 InputArr:
 X0:			DW 0
