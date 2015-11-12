@@ -166,7 +166,7 @@ The project will be completed as shown by the Gantt Chart in Appendix A.
 \myfigure{images/GanttChart.PNG}{Caption}{1}{fig:gantt}
 
 \section{Contingency Plan}
-The main plan is to navigate to all of the points using smooth arcs as show in \cref{fig:robotCircle}. However, this may not be feasible due to the lack of predictability in turning between robots. This also may not be feasible as the robot will have to compute the angles and keep track of its current angle relative to the next point. If this does not work, we will implement a navigation method where robot will turn only at 90 degree angles, resulting in movement in a grid-like pattern to navigate to all of the points.
+The main plan is to navigate to all of the points using smooth arcs as shown in \cref{fig:robotCircle}. However, this may not be feasible due to the difficulty of programming this in assembly with the given time constraints. If this does not work, the original approach will be used in which the robot will turn to the next point in the list. The list order will be determined by which method of point ordering is implemented. The preproccsing is the optimal solution but may not work due to the minute time constraint on having the robot travel to all of the points. 
 
 \pagebreak
 \printbibliography{}
