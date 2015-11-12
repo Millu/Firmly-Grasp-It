@@ -101,6 +101,9 @@ Segmented:
 
 MovingX:
 	CALL 	MoveNextSegmentX
+	LOAD 	MoveXFirst
+	SUB 	MoveXFirst
+	STORE 	MoveXFirst
 	JUMP 	MovingY
 	LOAD 	EndCount
 	JNEG 	Segmented
@@ -109,6 +112,9 @@ MovingX:
 
 MovingY:
 	CALL 	MoveNextSegmentY
+	LOAD 	MoveXFirst
+	ADDI 	1
+	STORE 	MoveXFirst
 	JUMP 	MovingX
 	LOAD 	EndCount
 	JNEG 	Segmented
