@@ -102,6 +102,7 @@ This proposal will guide the reader through Firmly Grasp It's approach to comple
 % Descriptive Title (same as cover page)
 
 \section{Introduction} 
+This document proposes how to successfully navigate a DE2 robot around a serious of 12 points in a minute using algorithms and the sensors available on the robot. This will be accomplished in steps. The first will preprocess the list of points and output an ideal order for the points to be naviagated to in. The first solution will be to visit the points in a random order. Next the greedy algorithm will be implemented, where the robot will visit the point immediately after it. The final opitimized solution will consist of the robot moving in smooth arcs to be most effcient in travelling to the points.
 % The document starts here in the introduction.  It is completely acceptable to repeat some of what you wrote in the ES here in the introduction, because the introduction should not depend on having read the ES.  This is the first time the reader is hearing what type of document this is, what is being designed or proposed, and how the design was approached.  Begin with a general but brief introduction of the topic, and then move into a discussion of more specific areas of interest.  The Introduction should include explicit statements such as “This report examines…” or “This document proposes….”
 
 \section{Technical Approach}
@@ -156,13 +157,17 @@ Some of the challenges the team might encounter with this implementation include
 \myfigure{images/robotCircle.png}{$B$ is the measured distance between the wheels of the robot, R is the radius of the circle minus $\frac{B}{2}$ and $\theta$ is the angle of the arc between the current location and the target destination.}{0.5}{fig:robotCircle}
 
 \section{Management Plan}
+The project will be completed as shown by the Gantt Chart in Appendix A.  
 % The bulk of the management plan will be organized in a Gantt chart, which can be included as an appendix and referred to in this section (“Appendix A contains a Gantt Chart showing…”).  However, also give the reader an overview of major tasks and milestones to give the Gantt chart some context.  
 
 \section{Contingency Plan}
+Our main plain to try and navigate to all of the points successfully using smooth arcs as described in the Braitenberg vehicles report. However, this may not be feasible due to the lack of predictability in turning between robots on a day to day basis. This also may not be feasible as the robot will have to compute the angles and keep track of its current angle relative to the next point. If this does not work, we will implement a navigation method where robot will turn only at 90 degree angles, resulting in movement in a grid-like pattern to navigate to all of the points.
 
-% This is also where you will include your contingency plan, which accounts specifically for how you will handle problems that may arise.  At the very least, it would say something like “If X turns out to not be feasible because of Y, then it will not be implemented.”  Better, would be something like “… then Z will be used instead because code already exists for it and it would require only minor effort to integrate with the design.”
-% There will not (and should not) be a contingency plan for everything you propose; you should not plan an entire project with the assumption that it all might fail.  Conversely, if you are certain that you can accomplish everything in your proposal, you should consider if there is anything more advanced that you can attempt.
 
+\pagebreak
+
+\section{Appendix A}
+%Insert Gantt chart here
 
 \pagebreak
 \printbibliography{}
