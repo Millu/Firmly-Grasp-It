@@ -92,6 +92,29 @@ Again:
 	CALL	NickSet
 	CALL	DIE
 
+Segmented:
+	CALL 	CurrPos
+	LOAD 	MoveXFirst
+	JZERO 	MovingX
+	JUMP 	MovingY
+
+
+MovingX:
+	CALL 	MoveNextSegmentX
+	JUMP 	MovingY
+	LOAD 	EndCount
+	JNEG 	Segmented
+	CALL	NickSet
+	CALL	DIE
+
+MovingY:
+	CALL 	MoveNextSegmentY
+	JUMP 	MovingX
+	LOAD 	EndCount
+	JNEG 	Segmented
+	CALL	NickSet
+	CALL	DIE
+
 ;***************************************************************
 ;* Advances the robot towards the next point
 ;***************************************************************
@@ -144,51 +167,115 @@ MoveNext:
 
 ;***************************************************************
 ;* Advances the robot towards the next point in 90 degree
-;* turns
+;* turns (XDirection)
 ;***************************************************************
-MoveNextSegment:
-	CALL   CurrPos
-	LOAD   CurX
-	LOAD   PrevX
-	STORE  L2X
-	IN     THETA
-	SUB    NINETY
-	JPOS   FACE180
-	JUMP   FACE0
+MoveNextSegmentX:
+	LOAD EndCount
+	ADDI 1
+	STORE EndCount
+	LOAD   	CurX
+	SUB   	PrevX
+	STORE  	L2X
+	IN     	THETA
+	SUB    	Deg90
+	JPOS   	FACE180
+	JUMP   	FACE0
 
 FACE0:
-	LOAD   L2X
-	JPOS   MoveFor
-	JUMP   MoveBackwards
+	LOAD   	L2X
+	JPOS   	MoveFor
+	JUMP   	MoveBackwards
 
 FACE180:
-	LOAD   L2X
-	JNEG   MoveFor
-	JUMP   MoveBackwards
+	LOAD   	L2X
+	JNEG   	MoveFor
+	JUMP   	MoveBackwards
 
 MoveFor:
-	LOAD  CurX
-	STORE MyDist
-	LOAD  PrevX
-	STORE PrevDist
-	CALL MyMove
+	LOAD  	CurX
+	STORE 	MyDist
+	LOAD  	PrevX
+	STORE 	PrevDist
+	LOAD	CurX
+	STORE	PrevX
+	CALL  	MyMove
 	Return
 
 MoveBackwards:
-	LOAD  CurX
-	STORE MyDist
-	LOAD  PrevX
-	STORE PrevDist
-	CALL  MyMoveBack
+	LOAD  	CurX
+	STORE 	MyDist
+	LOAD  	PrevX
+	STORE 	PrevDist
+	LOAD	CurX
+	STORE	PrevX
+	CALL  	MyMoveBack
 	Return
 
 
 ;***************************************************************
-;* Move to the next X which is in a positive direction
+;* Advances the robot towards the next point in 90 degree
+;* turns (YDirection)
 ;***************************************************************
+MoveNextSegmentY:
+	LOAD EndCount
+	ADDI 1
+	STORE EndCount
+	LOAD  	CurY
+	SUB  	PrevY
+	STORE  	L2Y
+	IN     	THETA
+	SUB    	Deg180
+	JPOS   	FACE270
+	JUMP   	FACE90
+
+FACE90:
+	LOAD   	L2Y
+	JPOS   	MoveFor
+	JUMP   	MoveBackwards
+
+FACE270:
+	LOAD   	L2Y
+	JNEG   	MoveFor
+	JUMP   	MoveBackwards
+
+MoveFor:
+	LOAD  	CurY
+	STORE 	MyDist
+	LOAD  	PrevY
+	STORE 	PrevDist
+	LOAD	CurY
+	STORE	PrevY
+	CALL  	MyMove
+	Return
+
+MoveBackwards:
+	LOAD  	CurY
+	STORE 	MyDist
+	LOAD  	PrevY
+	STORE 	PrevDist
+	LOAD  	CurY
+	STORE 	PrevY
+	CALL  	MyMoveBack
+	Return
+
 
 ;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist
+;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
+;***************************************************************
+MyMoveBack:
+	LOAD 	RFast
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist
+	; Subtract how far the vehicle needs to go to get to this point
+	SUB 	MyDist
+	JNEG	MyMove
+	RETURN
+
+;***************************************************************
+;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection)
 ;***************************************************************
 MyMove:
 	LOAD 	FFast
@@ -274,6 +361,8 @@ CurrPos:
 	Return
 
 
+
+
 ;***************************************************************
 ;* Increment Pointer
 ;* Moves the pointer down one in the array
@@ -282,9 +371,6 @@ IncrementPtr:
 	LOAD Pointer
 	ADDI 1
 	STORE Pointer
-	LOAD EndCount
-	ADDI 1
-	STORE EndCount
 	Return
 
 
@@ -1039,6 +1125,7 @@ MyDist:		DW 0
 MyAngle:	DW 0
 PrevDist:	DW 0
 PrevAngle:	DW 0
+MoveXFirst:	DW 0
 
 InputArr:
 X0:			DW 1162
