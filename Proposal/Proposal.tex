@@ -71,7 +71,7 @@
 \begin{document}
 
 \title{\vspace*{30mm}
-An Incremental Approach to DE-2 Bot Robot Navigation}
+An Incremental Approach to DE2Bot Robot Navigation}
 
 \author{
 Millon Atluri,\\
@@ -95,15 +95,17 @@ Submitted: \today
 % Executive Summary
 % This section should be one paragraph (not multiple), approximately ½ page in length.  The Executive Summary summarizes the entire document – it clearly and explicitly states what type of document this is (design report, comparison report, feasibility study, technical review, etc.) and explains what is being designed, reviewed, proposed, or compared.  A reader should know exactly what you plan to do and how you plan to do it, and the significance of the work after reading your ES.  You’re not writing a mystery novel.  Tell the reader up front, in one paragraph, what this document is about and why it is worth their time to read.  
 \section{Executive Summary}
-This proposal will guide the reader through Firmly Grasp It's approach to complex point-to-point Navigation in the DE-2 Bot Robot platform. This task entails making the DE-2 bot visit twelve arbitrary points given in a randomly ordered list. For simplicity, this task will be divided into two parts: a pre-computation step where the list of points is processed and an actuation step where the robot attempts to visit the coordinates in the order given by the previous step. The initial solution will have the robot going to the points in a random order. It will turn until it is facing the target and then advance until it reaches the target. A first iteration will attempt to improve on this by making the robot visit the closest point to the robot's current location. Then, the team will attempt to optimize the sequence of points by attempting pre-compute an optimal path with brute force. Finally, the team will attempt to implement a sophisticated algorithm that approximates the movements of the robot using circles to minimize the traveled time by the robot. Since the initial approaches are very simple to implement while still yielding a solution, the team always be able to backtrack using an automated version control system in case there are unforeseen problem during implementation.
+This proposal will guide the reader through Firmly Grasp It's approach to complex point-to-point navigation in the DE2Bot. This task entails making the DE2Bot visit twelve arbitrary points given in a randomly ordered list. For simplicity, this task will be divided into two parts: a pre-computation step where the list of points is processed and an actuation step where the robot attempts to visit the coordinates in the order given by the previous step. The initial solution will have the robot going to the points in original list's order. It will turn until it is facing the target and moves to it. Once the at the destination the odometry will be sent. A first iteration to solve the problem will attempt to improve on this by making the robot visit the closest point to the robot's current location. Then, the team will attempt to optimize the sequence of points by pre-computing an optimal path with brute force. Finally, the team will attempt to implement a sophisticated algorithm that approximates the movements of the robot using circles to minimize the travel time. Since the initial approaches are simple to implement while still yielding a solution, the team will always be able to revert to a previous version in case there are unforeseen problems during the implementation of more advanced features.
 
 
 \clearpage
 % Descriptive Title (same as cover page)
 
 \section{Introduction} 
-This document proposes how to successfully navigate a DE2 robot around a serious of 12 points in a minute using algorithms and the sensors available on the robot. This will be accomplished in steps. The first will preprocess the list of points and output an ideal order for the points to be naviagated to in. The first solution will be to visit the points in a random order. Next the greedy algorithm will be implemented, where the robot will visit the point immediately after it. The final opitimized solution will consist of the robot moving in smooth arcs to be most effcient in travelling to the points.
 % The document starts here in the introduction.  It is completely acceptable to repeat some of what you wrote in the ES here in the introduction, because the introduction should not depend on having read the ES.  This is the first time the reader is hearing what type of document this is, what is being designed or proposed, and how the design was approached.  Begin with a general but brief introduction of the topic, and then move into a discussion of more specific areas of interest.  The Introduction should include explicit statements such as “This report examines…” or “This document proposes….”
+
+This document proposes how to successfully navigate a DE2Bot around a series of 12 points in one minute using algorithms and the sensors available on the robot. This will be accomplished in steps. The first will preprocess the list of points and output an ideal order for the points to be naviagated to in. The first solution will be to visit the points in the original list order. Next a greedy algorithm will be implemented, where the robot will visit the closest point that has not been visited. The final opitimized solution will consist of the robot moving in smooth arcs to be most effcient in travelling to the points.
+
 
 \section{Technical Approach}
 
@@ -160,14 +162,10 @@ Some of the challenges the team might encounter with this implementation include
 The project will be completed as shown by the Gantt Chart in Appendix A.  
 % The bulk of the management plan will be organized in a Gantt chart, which can be included as an appendix and referred to in this section (“Appendix A contains a Gantt Chart showing…”).  However, also give the reader an overview of major tasks and milestones to give the Gantt chart some context.  
 
+\myfigure{images/GanttChart.PNG}{Caption}{1}{fig:gantt}
+
 \section{Contingency Plan}
-Our main plain to try and navigate to all of the points successfully using smooth arcs as described in the Braitenberg vehicles report. However, this may not be feasible due to the lack of predictability in turning between robots on a day to day basis. This also may not be feasible as the robot will have to compute the angles and keep track of its current angle relative to the next point. If this does not work, we will implement a navigation method where robot will turn only at 90 degree angles, resulting in movement in a grid-like pattern to navigate to all of the points.
-
-
-\pagebreak
-
-\section{Appendix A}
-%Insert Gantt chart here
+The main plan is to navigate to all of the points using smooth arcs as show in \cref{fig:robotCircle}. However, this may not be feasible due to the lack of predictability in turning between robots. This also may not be feasible as the robot will have to compute the angles and keep track of its current angle relative to the next point. If this does not work, we will implement a navigation method where robot will turn only at 90 degree angles, resulting in movement in a grid-like pattern to navigate to all of the points.
 
 \pagebreak
 \printbibliography{}
