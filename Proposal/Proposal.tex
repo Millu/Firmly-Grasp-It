@@ -1,4 +1,4 @@
-\documentclass[12pt,conference,onecolumn]{article} %This uses the IEEE template
+\documentclass[11pt,conference,onecolumn]{article} %This uses the IEEE template
 
 %Set up for inputing Figures
 \usepackage[margin=1in]{geometry}
@@ -16,6 +16,7 @@
 \usepackage[backend=biber]{biblatex}
 \usepackage{hyperref}
 \usepackage{cleveref}
+\usepackage{lscape}
 %Include packages for line spacing
 \usepackage{setspace}
 \usepackage{parskip}
@@ -81,7 +82,7 @@
 An Incremental Approach to DE2Bot Robot Navigation}
 
 \author{
-Millon Atluri,\\
+Millun Atluri,\\
 Mitchell Reid Donley,\\
 Nicholas Fahrenkrog,\\
 Ivan Dario Jimenez
@@ -94,8 +95,8 @@ School of Electrical and Computer Engineering\\
 Submitted: \today
 }
 
-\maketitle
-\clearpage
+\clearpage\maketitle
+
 % Executive Summary
 % This section should be one paragraph (not multiple), approximately ½ page in length.  The Executive Summary summarizes the entire document – it clearly and explicitly states what type of document this is (design report, comparison report, feasibility study, technical review, etc.) and explains what is being designed, reviewed, proposed, or compared.  A reader should know exactly what you plan to do and how you plan to do it, and the significance of the work after reading your ES.  You’re not writing a mystery novel.  Tell the reader up front, in one paragraph, what this document is about and why it is worth their time to read.
 \section*{Executive Summary}
@@ -172,12 +173,10 @@ Some of the challenges the team might encounter with this implementation include
 \section*{Management Plan}
 The project will be completed as shown by the Gantt Chart in Appendix A.
 % The bulk of the management plan will be organized in a Gantt chart, which can be included as an appendix and referred to in this section (“Appendix A contains a Gantt Chart showing…”).  However, also give the reader an overview of major tasks and milestones to give the Gantt chart some context.
-
-\myfigure{images/GanttChart.PNG}{Gantt chart of the project to fulfill the requirements given the deadlines.}{1}{fig:gantt}
-
 \section*{Contingency Plan}
 The main plan is to navigate to all of the points using smooth arcs as shown in \cref{fig:robotCircle}. However, this may not be feasible due to the difficulty of programming this in assembly with the given time constraints. If this does not work, the original approach will be used in which the robot will turn to the next point in the list. The list order will be determined by which method of point ordering is implemented. The preproccsing is the optimal solution but may not work due to the minute time constraint on having the robot travel to all of the points. 
 
 \pagebreak
-\printbibliography{}
+\section*{Appendix A}
+  \includegraphics[angle=90,origin=c,width=0.5\textwidth]{images/GanttChart.PNG}
 \end{document}
