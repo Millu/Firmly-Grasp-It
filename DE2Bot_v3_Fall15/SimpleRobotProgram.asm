@@ -244,7 +244,7 @@ FACE270:
 	JNEG   	MoveFor
 	JUMP   	MoveBackwards
 
-MoveFor:
+MoveForward:
 	LOAD  	CurY
 	STORE 	MyDist
 	LOAD  	PrevY
@@ -254,7 +254,7 @@ MoveFor:
 	CALL  	MyMove
 	Return
 
-MoveBackwards:
+MoveBackward:
 	LOAD  	CurY
 	STORE 	MyDist
 	LOAD  	PrevY
@@ -268,7 +268,7 @@ MoveBackwards:
 ;***************************************************************
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
 ;***************************************************************
-MyMoveBack:
+MyMoveBacks:
 	LOAD 	RFast
 	OUT 	RVELCMD
 	OUT 	LVELCMD
