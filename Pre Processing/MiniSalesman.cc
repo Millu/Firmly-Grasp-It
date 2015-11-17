@@ -13,12 +13,12 @@ pthread_mutex_t exitMutex, startCountMutex;
 pthread_cond_t exitCond;
 double sum = 1000000;
 Coordinates locations[13];
-double points[13][13];  
-Coordinates shortest[13]; 
+double points[13][13];
+Coordinates shortest[13];
 int startCount = 12;
 
 
-             
+
 double distanceFormula(double x1, double x2, double y1, double y2) {
     double tmp = pow((y2 - y1), 2);
     double tmp2 = pow((x2 - x1), 2);
@@ -46,7 +46,7 @@ void calcDistances() {
 
 
 void* calcShortest(void* v) {
-    // Cast thread number into 
+    // Cast thread number into
     int i = (unsigned long)v;
 
     shortest[0] = locations[0];
@@ -60,7 +60,6 @@ void* calcShortest(void* v) {
     }
 
     // For loop from HELL
-    cout << "Start loop "  << i << endl;
     for (int j = 1; j < 13; ++j) {
         if (j == i) {
             continue;
@@ -119,10 +118,10 @@ void* calcShortest(void* v) {
                                             + points[n][o] + points[o][p] + points[p][q]
                                             + points[q][r] + points[r][s] + points[s][t];
                                             // cout << tmpSum << " Counting: " << counter << endl;
-                                            counter++;                                                                                    
+                                            counter++;
                                             if (tmpSum < sum) {
                                                 pthread_mutex_lock(&shortestMutex);
-                                                sum = tmpSum;                                                             
+                                                sum = tmpSum;
                                                 shortest[1] = locations[i];
                                                 shortest[2] = locations[j];
                                                 shortest[3] = locations[k];
@@ -134,8 +133,8 @@ void* calcShortest(void* v) {
                                                 shortest[9] = locations[q];
                                                 shortest[10] = locations[r];
                                                 shortest[11] = locations[s];
-                                                shortest[12] = locations[t];    
-                                                pthread_mutex_unlock(&shortestMutex);                                                        
+                                                shortest[12] = locations[t];
+                                                pthread_mutex_unlock(&shortestMutex);
                                             }
                                         }
                                     }
@@ -149,7 +148,7 @@ void* calcShortest(void* v) {
     }
     cout << "End loop " << i << endl;
     // cout << "Count " << counter << endl;
-    pthread_mutex_lock(&startCountMutex);    
+    pthread_mutex_lock(&startCountMutex);
     startCount--;
     cout << "startCount " << startCount << endl;
     if (startCount == 0) {
@@ -158,7 +157,7 @@ void* calcShortest(void* v) {
         pthread_cond_broadcast(&exitCond);
         pthread_mutex_unlock(&exitMutex);
     } else {
-        pthread_mutex_unlock(&startCountMutex);    
+        pthread_mutex_unlock(&startCountMutex);
     }
     return 0;
 }
@@ -200,7 +199,6 @@ int main(int argc, const char* argv[]) {
 
     pthread_cond_init(&exitCond, 0);
     pthread_mutex_lock(&exitMutex);
-    // cout << "-------------------------------------" << endl;
     pthread_t* pts = (pthread_t*) malloc (12 * sizeof(pthread_t));
     for (int threadNo = 1; threadNo < 13; ++threadNo) {
         pthread_create(pts+threadNo, 0, calcShortest, (void *)threadNo);
@@ -212,6 +210,14 @@ int main(int argc, const char* argv[]) {
         cout << "Coordinate " << shortest[i].getOrder() << ": X = "
         << shortest[i].getX()
         << " and Y = " << shortest[i].getY() << endl;
+    }
+    cout << "-------------------------------------" << endl;
+
+    for (int i = 1; i < 13; i++) {
+        //cout << "Coordinate " << shortest[i].getOrder() << endl;
+        cout << "X" << i - 1 << ":      DW " << shortest[i].getX() * 290 << endl;
+        cout << "Y" << i - 1 << ":      DW " << shortest[i].getY() * 290 << endl;
+
     }
     pthread_mutex_destroy(&shortestMutex);
     free(pts);
