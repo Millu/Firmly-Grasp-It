@@ -1,1 +1,0 @@
-# Firmly-Grasp-It
