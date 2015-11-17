@@ -338,13 +338,14 @@ MyTurn:
 	RETURN
 
 Turn90:
-	LOAD	RFast
+	LOAD	Temp2
 	OUT 	LVELCMD
-	LOAD	FFast
+	LOAD	Temp
 	OUT		RVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
-	ADDI	-32
+	OUT    SSEG2
+	ADDI	-12
 	JNEG	Turn90
 	LOAD	Zero
 	OUT 	LVELCMD
@@ -1162,8 +1163,8 @@ EndCount:	DW 0
 ;***************************************************************
 ;* Variables
 ;***************************************************************
-Temp:  DW 0 ; "Temp" is not a great name, but can be useful
-Temp2: DW 0
+Temp:  DW 50 ; "Temp" is not a great name, but can be useful
+Temp2: DW -50
 Temp3: DW 0
 CDX: DW 0      ; current desired X
 CDY: DW 0      ; current desired Y
