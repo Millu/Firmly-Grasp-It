@@ -7,15 +7,16 @@
 #include <pthread.h>
 
 using namespace std;
+int NUM_THREADS = 4;
+int startCount = NUM_THREADS;
 
-pthread_mutex_t shortestMutex;
 pthread_mutex_t exitMutex, startCountMutex;
 pthread_cond_t exitCond;
 double sum = 1000000;
 Coordinates locations[13];
 double points[13][13];  
-Coordinates shortest[13]; 
-int startCount = 12;
+Coordinates shortestThreads[4][13]; 
+double sums[4];
 
 
              
@@ -47,9 +48,9 @@ void calcDistances() {
 
 void* calcShortest(void* v) {
     // Cast thread number into 
-    int i = (unsigned long)v;
-
-    shortest[0] = locations[0];
+    int threadNo = (unsigned long)v;
+    sums[threadNo] = 100000;
+    shortestThreads[threadNo][0] = locations[0];
     int t, counter = 0;
     double tmpSum;
 
@@ -60,82 +61,81 @@ void* calcShortest(void* v) {
     }
 
     // For loop from HELL
-    cout << "Start loop "  << i << endl;
-    for (int j = 1; j < 13; ++j) {
-        if (j == i) {
-            continue;
-        }
-        for (int k = 1; k < 13; ++k) {
-            if (k == i || k == j) {
+    for (int i = threadNo+1; i < 13; i += NUM_THREADS) {
+        for (int j = 1; j < 13; ++j) {
+            if (j == i) {
                 continue;
             }
-            for (int l = 1; l < 13; ++l) {
-                if (l == k || l == j || l == i) {
+            for (int k = 1; k < 13; ++k) {
+                if (k == i || k == j) {
                     continue;
                 }
-                for (int m = 1; m < 13; ++m) {
-                    if (m == l || m == k || m == j || m == i) {
+                for (int l = 1; l < 13; ++l) {
+                    if (l == k || l == j || l == i) {
                         continue;
                     }
-                    for (int n = 1; n < 13; ++n) {
-                        if (n == l || n == k || n == j || n == i || n == m) {
+                    for (int m = 1; m < 13; ++m) {
+                        if (m == l || m == k || m == j || m == i) {
                             continue;
                         }
-                        for (int o = 1; o < 13; ++o) {
-                            if (o == l || o == k || o == j || o == i || o == m || o == n) {
+                        for (int n = 1; n < 13; ++n) {
+                            if (n == l || n == k || n == j || n == i || n == m) {
                                 continue;
                             }
-                            for (int p = 1; p < 13; ++p) {
-                                if (p == l || p == k || p == j || p == i || p == m || p == n || p == o ) {
+                            for (int o = 1; o < 13; ++o) {
+                                if (o == l || o == k || o == j || o == i || o == m || o == n) {
                                     continue;
                                 }
-                                for (int q = 1; q < 13; ++q) {
-                                    if (q == l || q == k || q == j || q == i || q == m || q == n || q == o || q == p) {
+                                for (int p = 1; p < 13; ++p) {
+                                    if (p == l || p == k || p == j || p == i || p == m || p == n || p == o ) {
                                         continue;
                                     }
-                                    for (int r = 1; r < 13; ++r) {
-                                        if (r == l || r == k || r == j || r == i || r == m || r == n || r == o || r == p || r == q) {
+                                    for (int q = 1; q < 13; ++q) {
+                                        if (q == l || q == k || q == j || q == i || q == m || q == n || q == o || q == p) {
                                             continue;
                                         }
-                                        for (int s = 1; s < 13; ++s) {
-                                            if (s == l || s == k || s == j || s == i || s == m || s == n || s == o || s == p || s == q || s == r) {
+                                        for (int r = 1; r < 13; ++r) {
+                                            if (r == l || r == k || r == j || r == i || r == m || r == n || r == o || r == p || r == q) {
                                                 continue;
                                             }
-                                            // cout << "i " << i << endl;
-                                            // cout << "j " << j << endl;
-                                            // cout << "k " << k << endl;
-                                            // cout << "l " << l << endl;
-                                            // cout << "m " << m << endl;
-                                            // cout << "n " << n << endl;
-                                            // cout << "o " << o << endl;
-                                            // cout << "p " << p << endl;
-                                            // cout << "q " << q << endl;
-                                            // cout << "r " << r << endl;
-                                            // cout << "s " << s << endl;
-                                            // cout << "t " << t << endl;
-                                            t = 78 - (i + j + k + l + m + n + o + p + q + r + s);
-                                            tmpSum = points[0][i] + points[i][j] + points[j][k]
-                                            + points[k][l] + points[l][m] + points[m][n]
-                                            + points[n][o] + points[o][p] + points[p][q]
-                                            + points[q][r] + points[r][s] + points[s][t];
-                                            // cout << tmpSum << " Counting: " << counter << endl;
-                                            counter++;                                                                                    
-                                            if (tmpSum < sum) {
-                                                pthread_mutex_lock(&shortestMutex);
-                                                sum = tmpSum;                                                             
-                                                shortest[1] = locations[i];
-                                                shortest[2] = locations[j];
-                                                shortest[3] = locations[k];
-                                                shortest[4] = locations[l];
-                                                shortest[5] = locations[m];
-                                                shortest[6] = locations[n];
-                                                shortest[7] = locations[o];
-                                                shortest[8] = locations[p];
-                                                shortest[9] = locations[q];
-                                                shortest[10] = locations[r];
-                                                shortest[11] = locations[s];
-                                                shortest[12] = locations[t];    
-                                                pthread_mutex_unlock(&shortestMutex);                                                        
+                                            for (int s = 1; s < 13; ++s) {
+                                                if (s == l || s == k || s == j || s == i || s == m || s == n || s == o || s == p || s == q || s == r) {
+                                                    continue;
+                                                }
+                                                // cout << "i " << i << endl;
+                                                // cout << "j " << j << endl;
+                                                // cout << "k " << k << endl;
+                                                // cout << "l " << l << endl;
+                                                // cout << "m " << m << endl;
+                                                // cout << "n " << n << endl;
+                                                // cout << "o " << o << endl;
+                                                // cout << "p " << p << endl;
+                                                // cout << "q " << q << endl;
+                                                // cout << "r " << r << endl;
+                                                // cout << "s " << s << endl;
+                                                // cout << "t " << t << endl;
+                                                t = 78 - (i + j + k + l + m + n + o + p + q + r + s);
+                                                tmpSum = points[0][i] + points[i][j] + points[j][k]
+                                                + points[k][l] + points[l][m] + points[m][n]
+                                                + points[n][o] + points[o][p] + points[p][q]
+                                                + points[q][r] + points[r][s] + points[s][t];
+                                                // cout << tmpSum << " Counting: " << counter << endl;
+                                                counter++;                                                                                                                           
+                                                if (tmpSum < sums[threadNo]) {      
+                                                    sums[threadNo] = tmpSum;
+                                                    shortestThreads[threadNo][1] = locations[i];
+                                                    shortestThreads[threadNo][2] = locations[j];
+                                                    shortestThreads[threadNo][3] = locations[k];
+                                                    shortestThreads[threadNo][4] = locations[l];
+                                                    shortestThreads[threadNo][5] = locations[m];
+                                                    shortestThreads[threadNo][6] = locations[n];
+                                                    shortestThreads[threadNo][7] = locations[o];
+                                                    shortestThreads[threadNo][8] = locations[p];
+                                                    shortestThreads[threadNo][9] = locations[q];
+                                                    shortestThreads[threadNo][10] = locations[r];
+                                                    shortestThreads[threadNo][11] = locations[s];
+                                                    shortestThreads[threadNo][12] = locations[t];
+                                                }                                                
                                             }
                                         }
                                     }
@@ -147,7 +147,6 @@ void* calcShortest(void* v) {
             }
         }
     }
-    cout << "End loop " << i << endl;
     // cout << "Count " << counter << endl;
     pthread_mutex_lock(&startCountMutex);    
     startCount--;
@@ -194,26 +193,33 @@ int main(int argc, const char* argv[]) {
     int distance;
     calcDistances();
 
-    pthread_mutex_init(&shortestMutex, 0);
     pthread_mutex_init(&exitMutex, 0);
     pthread_mutex_init(&startCountMutex, 0);
 
     pthread_cond_init(&exitCond, 0);
     pthread_mutex_lock(&exitMutex);
     // cout << "-------------------------------------" << endl;
-    pthread_t* pts = (pthread_t*) malloc (12 * sizeof(pthread_t));
-    for (int threadNo = 1; threadNo < 13; ++threadNo) {
+    pthread_t* pts = (pthread_t*) malloc (NUM_THREADS * sizeof(pthread_t));
+    for (int threadNo = 0; threadNo < NUM_THREADS; ++threadNo) {
         pthread_create(pts+threadNo, 0, calcShortest, (void *)threadNo);
     }
 
     pthread_cond_wait(&exitCond, &exitMutex);
 
+    int smallestIndex = 0;
+    double smallVal = 10000;
+    for (int j = 0; j < NUM_THREADS; j++) {
+        if (sums[j] < smallVal) {
+            smallVal = sums[j];
+            smallestIndex = j;
+        }
+    }    
+
     for (int i = 0; i < 13; i++) {
-        cout << "Coordinate " << shortest[i].getOrder() << ": X = "
-        << shortest[i].getX()
-        << " and Y = " << shortest[i].getY() << endl;
+        cout << "Coordinate " << shortestThreads[smallestIndex][i].getOrder() << ": X = "
+        << shortestThreads[smallestIndex][i].getX()
+        << " and Y = " << shortestThreads[smallestIndex][i].getY() << endl;
     }
-    pthread_mutex_destroy(&shortestMutex);
     free(pts);
 }
 
