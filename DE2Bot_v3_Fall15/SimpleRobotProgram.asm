@@ -82,7 +82,10 @@ Main: ; "Real" program starts here.
 	LOADI	InputArr
 	STORE	Pointer
 	; Test robot turning 90 degrees
-	CALL	Turn90
+	LOAD	ZERO
+	ADDI	90
+	STORE 	Target
+	CALL	NewTurn
 	CALL	DIE
 Again:
 	CALL	MoveNext
@@ -336,6 +339,71 @@ MyTurn:
 	LOAD	Zero
 	OUT 	LVELCMD
 	RETURN
+	
+ALPHA: 	DW 1003
+BETA: 	DW 1
+CurVel: DW 0
+Prop: 	DW 0
+Der:	DW 0
+newVel:	DW 0
+Target: DW 0
+propA:	DW 0
+derB:	DW 0
+
+
+NewTurn:
+	IN 		THETA
+	OUT    	SSEG2
+	IN		THETA
+	SUB 	Target
+	STORE 	Prop
+	LOAD 	CurVel
+	STORE 	Der
+
+	LOAD  	der     ; LOADI can load numbers up to 1023
+	STORE  	m16sA    ; this is one input to the mult subroutine
+	LOAD  	BETA
+	STORE  	m16sB    ; this is the other number to multiply
+	CALL   	Mult16s  ; call this to perform the multiplication
+	LOAD   	mres16sH ; high word of the 32-bit result
+	STORE 	derB
+
+	LOAD  	prop     ; LOADI can load numbers up to 1023
+	STORE  	m16sA    ; this is one input to the mult subroutine
+	LOAD  	ALPHA
+	STORE  	m16sB    ; this is the other number to multiply
+	CALL   	Mult16s  ; call this to perform the multiplication
+	LOAD  	mres16sH ; high word of the 32-bit result
+	SUB 	derB
+	STORE 	newVel
+	LOAD 	prop
+	JPOS	KEEP
+	JNEG	BACK
+	JZERO	END
+	
+KEEP:
+	LOAD	newVel
+	OUT 	LVELCMD
+	LOAD	ZERO
+	SUB		newVel
+	OUT		RVELCMD
+	JUMP	NewTurn
+	
+BACK:
+	LOAD	newVel
+	OUT 	RVELCMD
+	LOAD	ZERO
+	SUB		newVel
+	OUT		LVELCMD
+	JUMP	NewTurn
+
+END:
+	RETURN
+
+
+
+	
+	
 
 Turn90:
 	LOAD	Temp2
@@ -565,7 +633,7 @@ Wloop:
 WaitAC:
 	STORE  WaitTime
 	OUT    Timer
-WACLoop:
+WACLoop:	
 	IN     Timer
 	SUB    WaitTime
 	JNEG   WACLoop
