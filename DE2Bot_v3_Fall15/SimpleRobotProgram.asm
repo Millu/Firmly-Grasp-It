@@ -341,7 +341,7 @@ MyTurn:
 	RETURN
 	
 ALPHA: 	DW 1003
-BETA: 	DW 1
+BETA: 	DW 0
 CurVel: DW 0
 Prop: 	DW 0
 Der:	DW 0
@@ -376,6 +376,7 @@ NewTurn:
 	LOAD  	mres16sH ; high word of the 32-bit result
 	SUB 	derB
 	STORE 	newVel
+	OUT 	LCD
 	LOAD 	prop
 	JPOS	KEEP
 	JNEG	BACK
