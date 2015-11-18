@@ -340,7 +340,7 @@ MyTurn:
 	OUT 	LVELCMD
 	RETURN
 	
-ALPHA: 	DW 1003
+ALPHA: 	DW 10
 BETA: 	DW 0
 CurVel: DW 0
 Prop: 	DW 0
@@ -349,6 +349,7 @@ newVel:	DW 0
 Target: DW 0
 propA:	DW 0
 derB:	DW 0
+MaxU:	DW 3590
 
 
 NewTurn:
@@ -375,7 +376,28 @@ NewTurn:
 	CALL   	Mult16s  ; call this to perform the multiplication
 	LOAD  	mres16sH ; high word of the 32-bit result
 	SUB 	derB
+
 	STORE 	newVel
+	STORE  	m16sA    ; this is one input to the mult subroutine
+	LOAD  	ZERO
+	ADDI	411
+	STORE  	m16sB    ; this is the other number to multiply
+	CALL   	Mult16s  ; call this to perform the multiplication
+	LOAD   	mres16sH ; high word of the 32-bit result
+	STORE 	newVel
+		
+	ADDI   334      ; 1003*8+334 = 8358
+	STORE  d16sN    ; this is the numerator to the div subroutine
+	LOADI  -29
+	STORE  d16sD    ; this is the denominator
+	CALL   Div16s   ; call this to perform the division
+	LOAD   dres16sQ ; quotient of division
+	OUT    LEDs
+	LOAD   dres16sR ; remainder of division
+	OUT    XLEDs
+	; 8358/-29 = -288 R6 = 0b1111111011100000 R0b0110
+
+	
 	OUT 	LCD
 	LOAD 	prop
 	JPOS	KEEP
