@@ -7,7 +7,7 @@
 #include <pthread.h>
 
 using namespace std;
-int NUM_THREADS = 4;
+int NUM_THREADS = 8;
 int startCount = NUM_THREADS;
 
 pthread_mutex_t exitMutex, startCountMutex;
@@ -15,8 +15,8 @@ pthread_cond_t exitCond;
 double sum = 1000000;
 Coordinates locations[13];
 double points[13][13];  
-Coordinates shortestThreads[4][13]; 
-double sums[4];
+Coordinates shortestThreads[8][13]; 
+double sums[8];
 
 
              
@@ -44,7 +44,6 @@ void calcDistances() {
 
     }
 }
-
 
 void* calcShortest(void* v) {
     // Cast thread number into 
@@ -171,14 +170,13 @@ int main(int argc, const char* argv[]) {
     int i = 1;
     locations[0] = new Coordinates(0, 0, 0);
 
-    while (getline(input, xStr, ',')) {
+    while (getline(input, xStr)) {
         getline(input, yStr);
         const char* xChar = xStr.c_str();
         const char* yChar = yStr.c_str();
 
         double x = atoi(xChar);
         double y = atoi(yChar);
-
         locations[i] = new Coordinates(x, y, i);
         i++;
     }
@@ -213,12 +211,18 @@ int main(int argc, const char* argv[]) {
             smallVal = sums[j];
             smallestIndex = j;
         }
-    }    
+    }
 
     for (int i = 0; i < 13; i++) {
         cout << "Coordinate " << shortestThreads[smallestIndex][i].getOrder() << ": X = "
         << shortestThreads[smallestIndex][i].getX()
         << " and Y = " << shortestThreads[smallestIndex][i].getY() << endl;
+    }
+    for (int i = 1; i < 13; i++) {
+        //cout << "Coordinate " << shortest[i].getOrder() << endl;
+        cout << "X" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getX() * 290 << endl;
+        cout << "Y" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getY() * 290 << endl;
+
     }
     free(pts);
 }
