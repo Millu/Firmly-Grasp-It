@@ -95,8 +95,8 @@ Again:
 Segmented:
 	CALL 	CurrPos
 	LOAD 	MoveXFirst
-	JZERO 	MovingX
-	JUMP 	MovingY
+	JZERO 	MovingY
+	JUMP 	MovingX
 	RETURN
 
 
@@ -105,8 +105,9 @@ MovingX:
 	LOAD 	MoveXFirst
 	SUB 	MoveXFirst
 	STORE 	MoveXFirst
-	JUMP 	MovingY
+	CALL 	SlowTurn90
 	LOAD 	EndCount
+	ADDI	-24
 	JNEG 	Segmented
 	CALL	NickSet
 	CALL	DIE
@@ -116,8 +117,9 @@ MovingY:
 	LOAD 	MoveXFirst
 	ADDI 	1
 	STORE 	MoveXFirst
-	JUMP 	MovingX
+	CALL 	SlowTurn90
 	LOAD 	EndCount
+	ADDI	-24
 	JNEG 	Segmented
 	CALL	NickSet
 	CALL	DIE
@@ -205,7 +207,7 @@ MoveFor:
 	STORE 	PrevDist
 	LOAD	CurX
 	STORE	PrevX
-	CALL  	MyMove
+	CALL  	MyMoveSeg
 	Return
 
 MoveBackwards:
@@ -215,7 +217,7 @@ MoveBackwards:
 	STORE 	PrevDist
 	LOAD	CurX
 	STORE	PrevX
-	CALL  	MyMoveBack
+	CALL  	MyMoveBackSeg
 	Return
 
 
@@ -252,7 +254,7 @@ MoveFor2:
 	STORE 	PrevDist
 	LOAD	CurY
 	STORE	PrevY
-	CALL  	MyMove
+	CALL  	MyMoveSeg
 	Return
 
 MoveBackwards2:
@@ -262,14 +264,14 @@ MoveBackwards2:
 	STORE 	PrevDist
 	LOAD  	CurY
 	STORE 	PrevY
-	CALL  	MyMoveBack2
+	CALL  	MyMoveBackSeg
 	Return
 
 
 ;***************************************************************
-;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
+;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
-MyMoveBack2:
+MyMoveBackSeg:
 	LOAD 	RFast
 	OUT 	RVELCMD
 	OUT 	LVELCMD
@@ -278,13 +280,13 @@ MyMoveBack2:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	MyMove
+	JNEG	MyMoveBackSeg
 	RETURN
 
 ;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection)
+;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
-MyMove:
+MyMoveSeg:
 	LOAD 	FFast
 	OUT 	RVELCMD
 	OUT 	LVELCMD
@@ -293,10 +295,10 @@ MyMove:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	MyMove
+	JNEG	MyMoveSeg
 	RETURN
 
-	
+
 ;***************************************************************
 ;* Tells the robot to move forward until it has advanced the length of MyDist
 ;***************************************************************
