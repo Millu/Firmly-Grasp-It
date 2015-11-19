@@ -102,10 +102,12 @@ Segmented:
 
 MovingX:
 	CALL 	MoveNextSegmentX
+	CALL	Wait2Sec
 	LOAD 	MoveXFirst
 	SUB 	MoveXFirst
 	STORE 	MoveXFirst
 	CALL 	SlowTurn90
+	CALL	Wait2Sec
 	LOAD 	EndCount
 	ADDI	-24
 	JNEG 	Segmented
@@ -114,10 +116,12 @@ MovingX:
 
 MovingY:
 	CALL 	MoveNextSegmentY
+	CALL	Wait2Sec
 	LOAD 	MoveXFirst
 	ADDI 	1
 	STORE 	MoveXFirst
 	CALL 	SlowTurn90
+	CALL	Wait2Sec
 	LOAD 	EndCount
 	ADDI	-24
 	JNEG 	Segmented
@@ -298,6 +302,19 @@ MyMoveSeg:
 	JNEG	MyMoveSeg
 	RETURN
 
+	
+;***************************************************************
+;* Wait 2 seconds
+;***************************************************************
+Wait2Sec:
+	LOADI	0
+	OUT		TIMER
+Check2Sec:
+	IN 		TIMER
+	SUB 	1
+	JNEG	Check2Sec
+	RETURN
+	
 
 ;***************************************************************
 ;* Tells the robot to move forward until it has advanced the length of MyDist
@@ -311,7 +328,7 @@ MyMoveBack:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	MyMove
+	JNEG	MyMoveSeg
 	RETURN
 
 ;***************************************************************
