@@ -18,11 +18,13 @@ Coordinates shortest[13];
 int startCount = 12;
 
 
-
+// This is for doing x and y separately meaning only turn in
+// 90 degree increments
+// Do the real distance formula for full range of angles
 double distanceFormula(double x1, double x2, double y1, double y2) {
-    double tmp = pow((y2 - y1), 2);
-    double tmp2 = pow((x2 - x1), 2);
-    return sqrt(tmp2 + tmp);
+    double tmp = (y2 - y1);
+    double tmp2 = (x2 - x1);
+    return tmp2 + tmp;
 }
 
 void calcDistances() {
