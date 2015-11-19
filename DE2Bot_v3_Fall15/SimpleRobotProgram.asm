@@ -82,7 +82,7 @@ Main: ; "Real" program starts here.
 	LOADI	InputArr
 	STORE	Pointer
 	; Test robot turning 90 degrees
-	CALL	Turn90
+	CALL	Segmented
 	CALL	DIE
 Again:
 	CALL	MoveNext
@@ -97,6 +97,7 @@ Segmented:
 	LOAD 	MoveXFirst
 	JZERO 	MovingX
 	JUMP 	MovingY
+	RETURN
 
 
 MovingX:
@@ -236,15 +237,15 @@ MoveNextSegmentY:
 
 FACE90:
 	LOAD   	L2Y
-	JPOS   	MoveFor
-	JUMP   	MoveBackwards
+	JPOS   	MoveFor2
+	JUMP   	MoveBackwards2
 
 FACE270:
 	LOAD   	L2Y
-	JNEG   	MoveFor
-	JUMP   	MoveBackwards
+	JNEG   	MoveFor2
+	JUMP   	MoveBackwards2
 
-MoveFor:
+MoveFor2:
 	LOAD  	CurY
 	STORE 	MyDist
 	LOAD  	PrevY
@@ -254,21 +255,21 @@ MoveFor:
 	CALL  	MyMove
 	Return
 
-MoveBackwards:
+MoveBackwards2:
 	LOAD  	CurY
 	STORE 	MyDist
 	LOAD  	PrevY
 	STORE 	PrevDist
 	LOAD  	CurY
 	STORE 	PrevY
-	CALL  	MyMoveBack
+	CALL  	MyMoveBack2
 	Return
 
 
 ;***************************************************************
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
 ;***************************************************************
-MyMoveBack:
+MyMoveBack2:
 	LOAD 	RFast
 	OUT 	RVELCMD
 	OUT 	LVELCMD
@@ -337,20 +338,37 @@ MyTurn:
 	OUT 	LVELCMD
 	RETURN
 
-Turn90:
+SlowTurn90:
+	LOAD	RSlow
+	OUT 	LVELCMD
+	LOAD	FSlow
+	OUT		RVELCMD
+	; Only turn with one wheel so that way it does not mess up RPOS
+	IN 		THETA
+	OUT		LCD
+	ADDI	-90
+	JNEG	SlowTurn90
+	LOAD	FFast
+	OUT 	LVELCMD
+	LOAD	RFast
+	OUT		RVELCMD
+	RETURN
+
+FastTurn90:
 	LOAD	RFast
 	OUT 	LVELCMD
 	LOAD	FFast
 	OUT		RVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
-	ADDI	-32
-	JNEG	Turn90
-	LOAD	Zero
+	OUT		LCD
+	ADDI	-90
+	JNEG	FastTurn90
+	LOAD	FSlow
 	OUT 	LVELCMD
+	LOAD	RSlow
 	OUT		RVELCMD
 	RETURN
-
 
 ;***************************************************************
 ;* Set Current Points
@@ -1134,30 +1152,30 @@ PrevAngle:	DW 0
 MoveXFirst:	DW 0
 
 InputArr:
-X0:			DW 1162
-Y0:			DW 581
-X1:			DW 581
-Y1:			DW 1743
-X2:			DW 0
-Y2:			DW -581
-X3:			DW 0
-Y3:			DW 0
-X4:			DW 0
-Y4:			DW 0
-X5:			DW 0
-Y5:			DW 0
-X6:			DW 0
-Y6:			DW 0
-X7:			DW 0
-Y7:			DW 0
-X8:			DW 0
-Y8:			DW 0
-X9:			DW 0
-Y9:			DW 0
-X10:		DW 0
-Y10:		DW 0
-X11:		DW 0
-Y11:		DW 0
+X0:      DW -870
+Y0:      DW -290
+X1:      DW 580
+Y1:      DW 1450
+X2:      DW -1160
+Y2:      DW -580
+X3:      DW -580
+Y3:      DW 1160
+X4:      DW -580
+Y4:      DW -1160
+X5:      DW 290
+Y5:      DW 1160
+X6:      DW 0
+Y6:      DW -1450
+X7:      DW -870
+Y7:      DW 580
+X8:      DW 580
+Y8:      DW -870
+X9:      DW 870
+Y9:      DW -870
+X10:      DW 870
+Y10:      DW -580
+X11:      DW 1450
+Y11:      DW 0
 EndCount:	DW 0
 ;***************************************************************
 ;* Variables
