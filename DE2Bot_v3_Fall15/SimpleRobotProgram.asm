@@ -81,44 +81,11 @@ Main: ; "Real" program starts here.
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
 	LOADI	InputArr
 	STORE	Pointer
-	; Test robot turning 90 degrees
-	CALL	Segmented
-	CALL	DIE
 Again:
 	CALL	MoveNext
 	LOAD	EndCount
 	ADDI	-24
 	JNEG	Again
-	CALL	NickSet
-	CALL	DIE
-
-Segmented:
-	CALL 	CurrPos
-	LOAD 	MoveXFirst
-	JZERO 	MovingX
-	JUMP 	MovingY
-	RETURN
-
-
-MovingX:
-	CALL 	MoveNextSegmentX
-	LOAD 	MoveXFirst
-	SUB 	MoveXFirst
-	STORE 	MoveXFirst
-	JUMP 	MovingY
-	LOAD 	EndCount
-	JNEG 	Segmented
-	CALL	NickSet
-	CALL	DIE
-
-MovingY:
-	CALL 	MoveNextSegmentY
-	LOAD 	MoveXFirst
-	ADDI 	1
-	STORE 	MoveXFirst
-	JUMP 	MovingX
-	LOAD 	EndCount
-	JNEG 	Segmented
 	CALL	NickSet
 	CALL	DIE
 
@@ -137,207 +104,6 @@ NickSet:
 ;***************************************************************
 ;* Advances the robot towards the next point
 ;***************************************************************
-MoveNext:
-	; Determines the next destination
-	CALL	CurrPos
-	; Calculates the 2-d vector to travel in
-	LOAD	CurX
-	SUB		PrevX
-	STORE	L2X
-	STORE	AtanX
-	LOAD	CurY
-	SUB		PrevY
-	STORE	L2Y
-	STORE	AtanY
-	; Calculates the distance to move
-	CALL	L2Estimate
-	STORE	MyDist
-	; Calculates the angle to turn
-	CALL	Atan2
-	STORE	MyAngle
-	OUT		LCD
-	; Physically turns in that direction
-	CALL	RevertAngle
-	CALL	MyTurn
-	IN		THETA
-	STORE	PrevAngle
-	; Physically moves in that direction
-	; CALL	MyMove
-	IN		RPOS
-	STORE	PrevDist
-	; Update old position variables
-	LOAD	CurX
-	STORE	PrevX
-	LOAD	CurY
-	STORE	PrevY
-	RETURN
-
-;***************************************************************
-;* Advances the robot towards the next point in 90 degree
-;* turns (XDirection)
-;***************************************************************
-MoveNextSegmentX:
-	LOAD EndCount
-	ADDI 1
-	STORE EndCount
-	LOAD   	CurX
-	SUB   	PrevX
-	STORE  	L2X
-	IN     	THETA
-	SUB    	Deg90
-	JPOS   	FACE180
-	JUMP   	FACE0
-
-FACE0:
-	LOAD   	L2X
-	JPOS   	MoveFor
-	JUMP   	MoveBackwards
-
-FACE180:
-	LOAD   	L2X
-	JNEG   	MoveFor
-	JUMP   	MoveBackwards
-
-MoveFor:
-	LOAD  	CurX
-	STORE 	MyDist
-	LOAD  	PrevX
-	STORE 	PrevDist
-	LOAD	CurX
-	STORE	PrevX
-	CALL  	MyMove
-	Return
-
-MoveBackwards:
-	LOAD  	CurX
-	STORE 	MyDist
-	LOAD  	PrevX
-	STORE 	PrevDist
-	LOAD	CurX
-	STORE	PrevX
-	CALL  	MyMoveBack
-	Return
-
-
-;***************************************************************
-;* Advances the robot towards the next point in 90 degree
-;* turns (YDirection)
-;***************************************************************
-MoveNextSegmentY:
-	LOAD EndCount
-	ADDI 1
-	STORE EndCount
-	LOAD  	CurY
-	SUB  	PrevY
-	STORE  	L2Y
-	IN     	THETA
-	SUB    	Deg180
-	JPOS   	FACE270
-	JUMP   	FACE90
-
-FACE90:
-	LOAD   	L2Y
-	JPOS   	MoveFor2
-	JUMP   	MoveBackwards2
-
-FACE270:
-	LOAD   	L2Y
-	JNEG   	MoveFor2
-	JUMP   	MoveBackwards2
-
-MoveFor2:
-	LOAD  	CurY
-	STORE 	MyDist
-	LOAD  	PrevY
-	STORE 	PrevDist
-	LOAD	CurY
-	STORE	PrevY
-	CALL  	MyMove
-	Return
-
-MoveBackwards2:
-	LOAD  	CurY
-	STORE 	MyDist
-	LOAD  	PrevY
-	STORE 	PrevDist
-	LOAD  	CurY
-	STORE 	PrevY
-	CALL  	MyMoveBack2
-	Return
-
-
-;***************************************************************
-;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
-;***************************************************************
-MyMoveBack2:
-	LOAD 	RFast
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JNEG	MyMove
-	RETURN
-
-;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection)
-;***************************************************************
-MyMove:
-	LOAD 	FFast
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JNEG	MyMove
-	RETURN
-
-	
-;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist
-;***************************************************************
-MyMoveBack:
-	LOAD 	FFast
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JNEG	MyMove
-	RETURN
-
-;***************************************************************
-;* Tells the robot to turn back to the zero angle
-;***************************************************************
-RevertAngle:
-	LOAD	RFast
-	OUT 	LVELCMD
-	; Only turn with one wheel so that way it does not mess up RPOS
-	IN 		THETA
-	; Orient to zero
-	JPOS	MyTurn
-	LOAD	Zero
-	OUT 	LVELCMD
-	RETURN
-;***************************************************************
-;* Tells the robot to turn until it has approached the angle of MyAngle
-;***************************************************************
-MyTurn:
-	LOAD	RFast
-	OUT 	LVELCMD
-	; Only turn with one wheel so that way it does not mess up RPOS
-	IN 		THETA
-	SUB		MyAngle
-	JNEG	MyTurn
-	LOAD	Zero
-	OUT 	LVELCMD
-	RETURN
 
 SlowTurn90:
 	LOAD	RSlow
@@ -371,6 +137,35 @@ FastTurn90:
 	OUT		RVELCMD
 	RETURN
 
+MoveNext:
+	; Determines the next destination
+	CALL	CurrPos
+	LOAD	CurX
+	SUB		PrevX
+	STORE	DeltaX
+	JNEG	MoveBackwardX
+	JPOS	MoveForwardX
+	; JZERO	Do Nothing
+	LOAD	CurY
+	SUB		PrevY
+	STORE	DeltaY
+	JNEG	Face270
+	JPOS	Face90
+	; JZERO Do Nothing
+	CALL	MoveForwardY
+	; Calculate Starting Position
+	IN		RPOS
+	STORE	PrevDist	
+	; Update old position variables
+	LOAD	CurX
+	STORE	PrevX
+	LOAD	CurY
+	STORE	PrevY
+	
+	RETURN
+	
+	
+	
 ;***************************************************************
 ;* Set Current Points
 ;* Saves your X and Y position that the pointer in inputs
