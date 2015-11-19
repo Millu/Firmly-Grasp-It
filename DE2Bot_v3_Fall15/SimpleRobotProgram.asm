@@ -296,6 +296,7 @@ MyMove:
 	JNEG	MyMove
 	RETURN
 
+	
 ;***************************************************************
 ;* Tells the robot to move forward until it has advanced the length of MyDist
 ;***************************************************************
