@@ -349,6 +349,82 @@ FastTurn90:
 	RETURN
 
 ;***************************************************************
+;* Tells robot to turn 90 degrees (Mitch version)
+;***************************************************************
+
+SlowTurn90Second:
+	IN 		THETA
+	STORE 	PrevAngle
+	ADDI 	-45
+	JNEG 	FACING0
+	ADDI 	-90
+	JNEG 	FACING90
+	ADDI 	-90
+	JNEG 	FACING180
+	ADDI 	-90
+	JNEG 	FACING270
+	JUMP 	FACING0
+
+FACING0:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-89
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING0
+
+FACING90:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-179
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING90
+
+FACING180:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-269
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING180
+
+FACING270:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-359
+	JZERO 	ENDSPIN
+	IN 		THETA
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING270
+
+ENDSPIN:
+	RETURN
+
+;***************************************************************
 ;* Set Current Points
 ;* Saves your X and Y position that the pointer in inputs
 ;* is pointing to
