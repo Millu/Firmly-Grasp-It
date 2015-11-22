@@ -96,6 +96,7 @@ Main: ; "Real" program starts here.
 	; we move once in the beginning outside the loop
 	; This way we have 24 movements
 	CALL 	SlowTurn90
+	CALL 	ToggleLED
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
@@ -104,6 +105,7 @@ Main: ; "Real" program starts here.
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	CALL 	SlowTurn90
+	CALL 	ToggleLED
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
@@ -114,6 +116,7 @@ Main: ; "Real" program starts here.
 
 LoopYYXX:
 	CALL 	SlowTurn90
+	CALL 	ToggleLED
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
@@ -122,6 +125,7 @@ LoopYYXX:
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	CALL 	SlowTurn90
+	CALL 	ToggleLED
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
@@ -153,14 +157,13 @@ ResetPreviousVariables:
 ;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
 ;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
 ;***************************************************************
-;* Turn on and off LED for 2 seconds
+;* Turn on and off LED for 5 seconds
 ;***************************************************************
 ToggleLED:
- 	LOAD 	LightUpLED
-	OUT 	LEDs
-	CALL 	Wait2Sec
-	LOAD 	TurnOffLED
-	OUT 	LEDs
+	LOAD	Four
+	OUT 	BEEP
+	CALL	Wait1
+	OUT 	BEEP
 	RETURN
 
 ;***************************************************************
@@ -172,8 +175,11 @@ MoveNextSegmentX:
 	SUB   	PrevX
 	STORE  	MyDist
 	IN     	THETA
-	SUB    	Deg90
-	JPOS   	FACE180
+	SUB    	Deg270
+	JPOS   	FACE0
+	IN		THETA
+	SUB 	Deg90
+	JPOS 	FACE180
 	JUMP   	FACE0
 
 FACE0:
@@ -187,9 +193,6 @@ FACE180:
 	JUMP   	MoveBackX
 
 MoveForX:
-	LOAD  	MyDist
-	CALL 	Abs
-	STORE 	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
@@ -198,9 +201,6 @@ MoveForX:
 	Return
 
 MoveBackX:
-	LOAD  	MyDist
-	CALL 	Abs
-	STORE 	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
@@ -233,9 +233,6 @@ FACE270:
 	JUMP   	MoveBackY
 
 MoveForY:
-	LOAD  	MyDist
-	CALL 	Abs
-	STORE 	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurY
@@ -244,9 +241,6 @@ MoveForY:
 	Return
 
 MoveBackY:
-	LOAD  	MyDist
-	CALL 	Abs
-	STORE 	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurY
@@ -259,17 +253,18 @@ MoveBackY:
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveBack:
-	LOAD 	RFast
+	LOAD 	RSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
+	; 5899 - 6000 - -100
 	; Subtract how far the vehicle has gone since the beginning
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	PhysicallyMoveBack
+	JPOS	PhysicallyMoveBack
 	; Quick Stop by doing one iteration of opposite direction
-	LOAD 	FFast
+	LOAD 	Zero
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	RETURN
@@ -278,7 +273,7 @@ PhysicallyMoveBack:
 ;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveFor:
-	LOAD 	FFast
+	LOAD 	FSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
@@ -288,7 +283,7 @@ PhysicallyMoveFor:
 	SUB 	MyDist
 	JNEG	PhysicallyMoveFor
 	; Quick Stop by doing one iteration of opposite direction
-	LOAD 	RFast
+	LOAD 	Zero
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	RETURN
@@ -303,7 +298,7 @@ Wait2Sec:
 	OUT		TIMER
 Check2Sec:
 	IN 		TIMER
-	ADDI 	-20
+	ADDI 	-50
 	JNEG	Check2Sec
 	RETURN
 
@@ -313,6 +308,15 @@ Check2Sec:
 ;***************************************************************
 
 SlowTurn90:
+	LOAD	PrevAngle
+	ADDI	-270
+	JZERO	SetAngleZero
+	ADDI	90
+	STORE	PrevAngle
+	JUMP	PhysicallyTurn
+SetAngleZero:
+	STORE	PrevAngle
+PhysicallyTurn:
 	LOAD	RSlow
 	OUT 	LVELCMD
 	LOAD	FSlow
@@ -320,11 +324,12 @@ SlowTurn90:
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
 	OUT		LCD
-	ADDI	-90
+	SUB		PrevAngle
 	JNEG	SlowTurn90
-	LOAD	FFast
+	ADDI	-260
+	JPOS	PhysicallyTurn
+	LOAD	Zero
 	OUT 	LVELCMD
-	LOAD	RFast
 	OUT		RVELCMD
 	RETURN
 
@@ -338,9 +343,8 @@ FastTurn90:
 	OUT		LCD
 	ADDI	-90
 	JNEG	FastTurn90
-	LOAD	FSlow
+	LOAD	Zero
 	OUT 	LVELCMD
-	LOAD	RSlow
 	OUT		RVELCMD
 	RETURN
 
@@ -1148,35 +1152,37 @@ CurX:		DW 0
 CurY:		DW 0
 MyDist:		DW 0
 PrevDist:	DW 0
+PrevAngle:	DW 0
 EndCount:	DW 0
 LightUpLED: DW 1
 TurnOffLED: DW 0
+LightUpLED2: 	DW 2
 
 InputArr:
-X0:      DW -870
+X0:      DW 290
 Y0:      DW -290
 X1:      DW 580
-Y1:      DW 1450
-X2:      DW -1160
-Y2:      DW -580
-X3:      DW -580
-Y3:      DW 1160
-X4:      DW -580
-Y4:      DW -1160
+Y1:      DW -580
+X2:      DW 870
+Y2:      DW -870
+X3:      DW 870
+Y3:      DW 870
+X4:      DW 580
+Y4:      DW 580
 X5:      DW 290
-Y5:      DW 1160
-X6:      DW 0
-Y6:      DW -1450
-X7:      DW -870
+Y5:      DW 290
+X6:      DW -290
+Y6:      DW 290
+X7:      DW -580
 Y7:      DW 580
-X8:      DW 580
-Y8:      DW -870
-X9:      DW 870
-Y9:      DW -870
-X10:      DW 870
+X8:      DW -870
+Y8:      DW 870
+X9:      DW -290
+Y9:      DW -290
+X10:      DW -580
 Y10:      DW -580
-X11:      DW 1450
-Y11:      DW 0
+X11:      DW -870
+Y11:      DW -870
 
 ;***************************************************************
 ;* Variables
