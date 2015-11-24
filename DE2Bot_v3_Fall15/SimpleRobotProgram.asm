@@ -261,16 +261,29 @@ MoveBackY:
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveBack:
+MoveBackMed:
+	LOADI 	RMid
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist
+	; Subtract how far the vehicle needs to go to get to this point
+	SUB 	MyDist
+	ADD 	HalfFoot
+	JNEG 	MoveBackSlow
+	JUMP	MoveBackMed
+	
+MoveBackSlow:
 	LOAD 	RSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
-	; 5999 - 6000 - -290
 	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist ; 0x04D1
+	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
-	ADD 	MyDist ; 0x0122
-	JPOS	PhysicallyMoveBack
+	SUB 	MyDist
+	JNEG 	MoveBackSlow
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
 	OUT 	RVELCMD
@@ -281,6 +294,21 @@ PhysicallyMoveBack:
 ;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveFor:
+
+MoveForMed:
+	LOADI 	FMid
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist
+	; Subtract how far the vehicle needs to go to get to this point
+	SUB 	MyDist
+	ADD 	HalfFoot
+	JNEG 	MoveForSlow
+	JUMP	MoveForMed
+	
+MoveForSlow:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
@@ -289,7 +317,7 @@ PhysicallyMoveFor:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	PhysicallyMoveFor
+	JNEG 	MoveForSlow
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
 	OUT 	RVELCMD
@@ -306,7 +334,7 @@ Wait2Sec:
 	OUT		TIMER
 Check2Sec:
 	IN 		TIMER
-	ADDI 	-10
+	ADDI 	-5
 	JNEG	Check2Sec
 	RETURN
 
@@ -1386,6 +1414,7 @@ LowNibl:  DW &HF       ; 0000 0000 0000 1111
 ; some useful movement values
 OneMeter: DW 952       ; ~1m in 1.05mm units
 HalfMeter: DW 476      ; ~0.5m in 1.05mm units
+HalfFoot:	DW 145
 OneFoot:  DW 290       ; ~1ft in 1.05mm robot units
 TwoFeet:  DW 581       ; ~2ft in 1.05mm units
 Deg90:    DW 90        ; 90 degrees in odometer units
