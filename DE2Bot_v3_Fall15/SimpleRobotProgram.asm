@@ -95,8 +95,7 @@ Main: ; "Real" program starts here.
 	; This does the end case for the final 3 movements because
 	; we move once in the beginning outside the loop
 	; This way we have 24 movements
-	CALL 	SlowTurn90
-	CALL 	ToggleLED
+	CALL 	SlowTurn90Second
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
@@ -104,8 +103,7 @@ Main: ; "Real" program starts here.
 
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
-	CALL 	SlowTurn90
-	CALL 	ToggleLED
+	CALL 	SlowTurn90Second
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
@@ -115,8 +113,7 @@ Main: ; "Real" program starts here.
 	CALL	DIE
 
 LoopYYXX:
-	CALL 	SlowTurn90
-	CALL 	ToggleLED
+	CALL 	SlowTurn90Second
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
@@ -124,8 +121,7 @@ LoopYYXX:
 
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
-	CALL 	SlowTurn90
-	CALL 	ToggleLED
+	CALL 	SlowTurn90Second
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
@@ -193,6 +189,9 @@ FACE180:
 	JUMP   	MoveBackX
 
 MoveForX:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
@@ -201,6 +200,9 @@ MoveForX:
 	Return
 
 MoveBackX:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
@@ -233,6 +235,9 @@ FACE270:
 	JUMP   	MoveBackY
 
 MoveForY:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurY
@@ -241,6 +246,9 @@ MoveForY:
 	Return
 
 MoveBackY:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
 	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurY
@@ -257,11 +265,11 @@ PhysicallyMoveBack:
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
-	; 5899 - 6000 - -100
+	; 5999 - 6000 - -290
 	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
+	SUB		PrevDist ; 0x04D1
 	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
+	ADD 	MyDist ; 0x0122
 	JPOS	PhysicallyMoveBack
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
@@ -298,7 +306,7 @@ Wait2Sec:
 	OUT		TIMER
 Check2Sec:
 	IN 		TIMER
-	ADDI 	-50
+	ADDI 	-10
 	JNEG	Check2Sec
 	RETURN
 
@@ -353,6 +361,7 @@ FastTurn90:
 ;***************************************************************
 
 SlowTurn90Second:
+	CALL 	Wait2Sec
 	IN 		THETA
 	STORE 	PrevAngle
 	ADDI 	-45
@@ -371,7 +380,23 @@ FACING0:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	IN 		THETA
-	ADDI 	-89
+	ADDI 	-85
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
 	JZERO 	ENDSPIN
 	ADDI 	-1
 	JZERO 	ENDSPIN
@@ -385,7 +410,23 @@ FACING90:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	IN 		THETA
-	ADDI 	-179
+	ADDI 	-175
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
 	JZERO 	ENDSPIN
 	ADDI 	-1
 	JZERO 	ENDSPIN
@@ -399,7 +440,23 @@ FACING180:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	IN 		THETA
-	ADDI 	-269
+	ADDI 	-265
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
 	JZERO 	ENDSPIN
 	ADDI 	-1
 	JZERO 	ENDSPIN
@@ -413,15 +470,37 @@ FACING270:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	IN 		THETA
-	ADDI 	-359
+	ADDI 	-355
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
 	JZERO 	ENDSPIN
 	IN 		THETA
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
 	JZERO 	ENDSPIN
 	ADDI 	-1
 	JZERO 	ENDSPIN
 	JUMP FACING270
 
 ENDSPIN:
+	LOAD 	ZERO
+	OUT 	LVELCMD
+	OUT 	RVELCMD
+	CALL 	Wait2Sec
 	RETURN
 
 ;***************************************************************
@@ -1236,11 +1315,11 @@ LightUpLED2: 	DW 2
 
 InputArr:
 X0:      DW 290
-Y0:      DW -290
+Y0:      DW 290
 X1:      DW 580
-Y1:      DW -580
+Y1:      DW 580
 X2:      DW 870
-Y2:      DW -870
+Y2:      DW 870
 X3:      DW 870
 Y3:      DW 870
 X4:      DW 580
