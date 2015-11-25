@@ -149,7 +149,6 @@ void* calcShortest(void* v) {
     // cout << "Count " << counter << endl;
     pthread_mutex_lock(&startCountMutex);
     startCount--;
-    cout << "startCount " << startCount << endl;
     if (startCount == 0) {
         pthread_mutex_unlock(&startCountMutex);
         pthread_mutex_lock(&exitMutex);
@@ -165,20 +164,52 @@ int main(int argc, const char* argv[]) {
 
     ifstream input(argv[1]);
 
-    string xStr;
-    string yStr;
-    int i = 1;
+    string initPoints;
     locations[0] = new Coordinates(0, 0, 0);
+    bool negative = false;
+    bool onX = true;
+    char holder[1];
+    int order = 1;
+    double x;
+    double y;
+    getline(input, initPoints);
+    for (int i = 0; i < initPoints.length(); i++) {
+        const char charNum = initPoints.at(i);
+        holder[0] = charNum;
+        if (onX) {
+            if (charNum == '-') {
+                negative = true;
+            } else {
+                if (negative) {
+                    x = atoi(holder);
+                    x = x * -1;
+                    negative = false;
+                } else {
+                    x = atoi(holder);
+                    negative = false;
+                }
+                onX = false;
+            }
+        } else {
+            if (charNum == '-') {
+                negative = true;
+            } else {
+                if (negative) {
+                    y = atoi(holder);
+                    y = y * -1;
+                    negative = false;
+                } else {
+                    y = atoi(holder);
+                    negative = false;
+                }
+                onX = true;
+                locations[order] = new Coordinates(x, y, order);
+                order++;
+            }
 
-    while (getline(input, xStr)) {
-        getline(input, yStr);
-        const char* xChar = xStr.c_str();
-        const char* yChar = yStr.c_str();
+        }
 
-        double x = atoi(xChar);
-        double y = atoi(yChar);
-        locations[i] = new Coordinates(x, y, i);
-        i++;
+
     }
     for (int i = 0; i < 13; i++) {
         cout << "Coordinate " << locations[i].getOrder() << ": X = "
