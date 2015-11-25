@@ -14,12 +14,12 @@ pthread_mutex_t exitMutex, startCountMutex;
 pthread_cond_t exitCond;
 double sum = 1000000;
 Coordinates locations[13];
-double points[13][13];  
-Coordinates shortestThreads[8][13]; 
+double points[13][13];
+Coordinates shortestThreads[8][13];
 double sums[8];
 
 
-             
+
 double distanceFormula(double x1, double x2, double y1, double y2) {
     double tmp = pow((y2 - y1), 2);
     double tmp2 = pow((x2 - x1), 2);
@@ -46,7 +46,7 @@ void calcDistances() {
 }
 
 void* calcShortest(void* v) {
-    // Cast thread number into 
+    // Cast thread number into
     int threadNo = (unsigned long)v;
     sums[threadNo] = 100000;
     shortestThreads[threadNo][0] = locations[0];
@@ -119,8 +119,8 @@ void* calcShortest(void* v) {
                                                 + points[n][o] + points[o][p] + points[p][q]
                                                 + points[q][r] + points[r][s] + points[s][t];
                                                 // cout << tmpSum << " Counting: " << counter << endl;
-                                                counter++;                                                                                                                           
-                                                if (tmpSum < sums[threadNo]) {      
+                                                counter++;
+                                                if (tmpSum < sums[threadNo]) {
                                                     sums[threadNo] = tmpSum;
                                                     shortestThreads[threadNo][1] = locations[i];
                                                     shortestThreads[threadNo][2] = locations[j];
@@ -134,7 +134,7 @@ void* calcShortest(void* v) {
                                                     shortestThreads[threadNo][10] = locations[r];
                                                     shortestThreads[threadNo][11] = locations[s];
                                                     shortestThreads[threadNo][12] = locations[t];
-                                                }                                                
+                                                }
                                             }
                                         }
                                     }
@@ -147,7 +147,7 @@ void* calcShortest(void* v) {
         }
     }
     // cout << "Count " << counter << endl;
-    pthread_mutex_lock(&startCountMutex);    
+    pthread_mutex_lock(&startCountMutex);
     startCount--;
     cout << "startCount " << startCount << endl;
     if (startCount == 0) {
@@ -156,7 +156,7 @@ void* calcShortest(void* v) {
         pthread_cond_broadcast(&exitCond);
         pthread_mutex_unlock(&exitMutex);
     } else {
-        pthread_mutex_unlock(&startCountMutex);    
+        pthread_mutex_unlock(&startCountMutex);
     }
     return 0;
 }
@@ -222,7 +222,7 @@ int main(int argc, const char* argv[]) {
         //cout << "Coordinate " << shortest[i].getOrder() << endl;
         cout << "X" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getX() * 290 << endl;
         cout << "Y" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getY() * 290 << endl;
-
+        cout << "Order" << i - 1 << ":  DW " << shortestThreads[smallestIndex][i].getOrder() << endl;
     }
     free(pts);
 }
