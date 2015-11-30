@@ -5,7 +5,8 @@
 \usepackage{wrapfig}
 \usepackage[utf8]{inputenc}
 %Include math packages
-\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{latexsym}
@@ -26,7 +27,7 @@
 \usepackage[scaled]{beramono}
 \newcommand\Small{\fontsize{9}{9.2}\selectfont}
 \newcommand*\LSTfont{\Small\ttfamily\SetTracking{encoding=*}{-60}\lsstyle}
-
+\def\BState{\State\hskip-\ALG@thistlm}
 \addbibresource{/home/ivan/Documents/Latex_Stuff/BibDB/AllEntries.bib}
 %dont think I need to use the graphics path yet
 \graphicspath{{/home/ivan/src/Internship_GTRI/Documentation/Images/}
@@ -34,7 +35,7 @@
 
 \DeclareGraphicsExtensions{.pdf,.jpeg,.jpg,.png} %Make sure your figure extension is included in this list
 
-%simple command to add a figure 
+%simple command to add a figure
 %\myfigure{address}{caption}{width}{label}
 \newcommand{\myfigure}[4]{
   \begin{figure}[h!]
@@ -69,22 +70,104 @@
 %Start the document
 \begin{document}
 
-\title{\vspace*{70mm}
-An Incremental Approach to DE-2 Bot Robot Navigation}
+\title{\vspace*{30mm}
+An Incremental Approach to DE2Bot Robot Navigation}
 
-\author{Students: 
+\author{
+Millon Atluri,\\
+Mitchell Reid Donley,\\
+Nicholas Fahrenkrog,\\
+Ivan Dario Jimenez
+
+\vspace*{30mm}\\
+ECE2031 Digital Design Lab,\\
+Section L03\\
+\vspace*{30mm}\\
+Georgia Institute of Technology\\
+School of Electrical and Computer Engineering\\
+Submitted: \today
 }
 
 \maketitle
 
-\pagebreak{}
+\clearpage
 
-% \begin{abstract}
- 
-% \end{abstract}
+% Executive Summary
+% This section should be one paragraph (not multiple), approximately ½ page in length.  The Executive Summary summarizes the entire document – it clearly and explicitly states what type of document this is (design report, comparison report, feasibility study, technical review, etc.) and explains what is being designed, reviewed, proposed, or compared.  A reader should know exactly what you plan to do and how you plan to do it, and the significance of the work after reading your ES.  You’re not writing a mystery novel.  Tell the reader up front, in one paragraph, what this document is about and why it is worth their time to read.
+\section{Executive Summary}
+This proposal will guide the reader through Firmly Grasp It's approach to complex point-to-point navigation in the DE2Bot. This task entails making the DE2Bot visit twelve arbitrary points given in a randomly ordered list. For simplicity, this task will be divided into two parts: a pre-computation step where the list of points is processed and an actuation step where the robot attempts to visit the coordinates in the order given by the previous step. The initial solution will have the robot going to the points in original list's order. It will turn until it is facing the target and moves to it. Once the at the destination the odometry will be sent. A first iteration to solve the problem will attempt to improve on this by making the robot visit the closest point to the robot's current location. Then, the team will attempt to optimize the sequence of points by pre-computing an optimal path with brute force. Finally, the team will attempt to implement a sophisticated algorithm that approximates the movements of the robot using circles to minimize the travel time. Since the initial approaches are simple to implement while still yielding a solution, the team will always be able to revert to a previous version in case there are unforeseen problems during the implementation of more advanced features.
 
-\section{A Section}
 
+\clearpage
+% Descriptive Title (same as cover page)
+
+
+\section{Introduction}
+% The document starts here in the introduction.  It is completely acceptable to repeat some of what you wrote in the ES here in the introduction, because the introduction should not depend on having read the ES.  This is the first time the reader is hearing what type of document this is, what is being designed or proposed, and how the design was approached.  Begin with a general but brief introduction of the topic, and then move into a discussion of more specific areas of interest.  The Introduction should include explicit statements such as “This report examines…” or “This document proposes….”
+
+This document proposes how to successfully navigate a DE2Bot around a series of 12 points in one minute using algorithms and the sensors available on the robot. This will be accomplished in steps. The first will preprocess the list of points and output an ideal order for the points to be naviagated to in. The first solution will be to visit the points in the original list order. Next a greedy algorithm will be implemented, where the robot will visit the closest point that has not been visited. The final opitimized solution will consist of the robot moving in smooth arcs to be most effcient in travelling to the points.
+
+
+\section{Technical Approach}
+
+% Explain the process and steps you will take to solve the problem.  Organize this section using descriptive subheadings so that the reader can easily find the components of the design.  Use figures, bullets, enumerated lists, or tables to organize information (you don’t always have to write a paragraph!).
+% Descriptive Subheading
+% An example of a subsection might be something like “Correcting for Heading Drift” or “Program Flow During Application Demonstration”.  Consider your audience and their level of technical expertise to decide what level of detail to include – they are very familiar with the robot, SCOMP, odometry, etc., but not the additions that you have made.
+% Descriptive Subheading
+% More information.
+\subsection{Overview}
+Navigating a differential steering robot to a set of coordinates can be divided into two sub-problems: point ordering and point-to-point navigation. These two independent problems can be tackled with a variety of approaches.
+
+\myfigure{images/Pipeline.jpg}{A broad description of the controller pipeline. The Randomly Ordered Point List is assumed to be given as Cartesian coordinates for the locations that must be visited. Off-board computation will re-ordered the points to an efficient path. The low-level execution will actuate the robot to reach those points in the given order.}{0.5}{fig:pipeline}
+
+\subsection{Point Ordering}
+\subsubsection{Random Point Navigation}
+Initially, the team is going to ignore the order of the points and attempt to pursue the point list as it is given. This approach will be sub-optimal and will not reach every point in the allotted time. However, this approach allows us to test point-to-point navigation independently of the point ordering. Since the team does not intend to compute the order of the points on-board, the path execution implementation should be indifferent between this and a more sophisticated algorithm.
+\subsubsection{Greedy Point Selection}
+The second approach will be to select the order of the points such that the robot targets the closest point that has not been reached. This is a greedy approach that will produce a sub-optimal trajectory, but this algorithm will yield an improvement over the initial random point implementation.
+% Not Sure if actually adding an algorithm is a good idea I'll stick to a description unless someone else thinks it's a good idea.
+% \begin{algorithm}
+%   \caption{\emph{GreedyOrdering}}
+%   \begin{algorithmic}[1]
+%     \Procedure{GreedyOrdering}{$X = (x_{0} \cdots x_{12}),~ Y = y_{0} \cdots y_{12}$}
+%     \State $Y_{Ordered} := ()$
+%     \State $X_{Ordered} := ()$
+%     \State $workingPair := (X.pop(0),~ Y.pop(0))$
+%     \While{$|X| > 0$}
+%     \State $(workingPair) := PopMinDistance(X,Y, workingPair)$
+%     \State $Y_{Ordered}.push(workingPair.y)$
+%     \State $X_{Ordered}.push(workingPair.x)$
+%     \EndWhile
+%     \State \Return $(X_{Ordered}, ~Y_{Ordered})$
+%     \EndProcedure
+%   \end{algorithmic}
+% \end{algorithm}
+\subsubsection{Optimal Point Navigation}
+If it becomes evident that the order of the points is a critical inefficiency to the completion of the task, the team will focus on getting an optimal solution to the problem. As it stands the Traveling Salesman Problem for 12 nodes would require a brute-force program to check about 500 million or exactly $12!$ possible paths. Although, it is not reasonable to expect even a fast modern computer to check that many paths. There are several parallel and dynamic programming solutions that might produce an optimal path within the pre-computation time window. However, the team estimates that the gains from a perfectly optimal path are likely to be minimal compared to a greedy algorithm. Thus, the focus of the project will be in point-to-point navigation and actuation.
+
+
+\subsection{Point-to-Point Navigation}
+
+\subsubsection{Turn, Move, Repeat}
+For this implementation, the team assumes that an ordered list of points is given. Starting with the current location, the robot will turn until it faces a target point. Then, the robot advances until it has moved the calculated euclidean distance between the current point and the target point. As specified in the problem, the initial position of the robot is going to be $x=0$, $y=0$ and the robot will be at an angle $\theta=0^{\circ}$ from the origin.
+
+% Since we are supposed to already have something implemented on this end we need a paragraph here on what exactly the code for this part looks like.
+
+\subsubsection{Circles as approximations for trajectories.}
+\myfigure{images/robotCircle.png}{$B$ is the measured distance between the wheels 
+of the robot, R is the radius of the circle minus $\frac{B}{2}$ and $\theta$ is the angle of the arc between the current location and the target destination.}{0.5}{fig:robotCircle}
+
+This method depends on being able to create a circle of radius $R+\frac{B}{2}$ between the current location and any destination. This radius can be treated as a line that is parallel to the axis of the wheels. The displacement of each wheel can be expressed as $X_{L} = R \times \theta$ and $X_{R} = (R + B) \times \theta$ for the left and right wheels respectively and given a $\theta$ in radians. Since both wheels should cover their distances in the same time, the velocity of each wheel must be set to $V_{L} = \frac{X_{L}}{t}$ and  $V_{R} = \frac{X_{R}}{t}$ such that $t  = \frac{max\{X_{L}, X_{R}\}}{V_{MAX}}$ where $V_{MAX}$ is the maximum velocity the team is  willing to let the wheels go.\par
+Although the velocity parameter for each wheel has been calculated for a given circle, it remains to be shown that such a circle can be found. There are only two edge cases where it might be impossible to find a circle: a destination very close to the robot and in a direction parallel to the axis of the wheels and a destination directly in-front of the robot. The first case can be safely ignored since the robot will be within the range of the target without having to move. In such a case the robot should proceed to the next target. The case of a point directly in-front of the robot can be considered as a special circle where the radius has infinite length. To handle this case the team will implement some truncation after calculating a radius that is too long to ensure that numerical instability doesn't produce unexpected results. For all remaining cases you can deduce that the circle will lie along the line defined by the equation $(X_1 - C_x)^2 + (Y_1 - C_Y)^2 = (X_0 - P_x)^2 + (Y_0 - C_y)^2$ where $(X_1,Y_1)$ and $(X_0,Y_0)$ are the coordinates for the given points and $(C_X,C_Y)$ is the coordinate for the center of the circle. The exact center will then be at the intersection of that line and the line parallel to the axis of the wheels of the robot defined as $tan(\theta_{robot}) \times (C_x + X_0) + Y_0 = C_y$ where $\theta_{robot}$ is the orientation of the DE-2Bot. This is a simple system of equations that can be solved since there are two free variables and two equations.\par
+Some of the challenges the team might encounter with this implementation include a greater error that might make the robot hit a wall and a lot more code complexity. The risk of this difficult solution is heavily mitigated by having a pre-existing solution where this approach is only the final iteration.
+\section{Management Plan}
+The project will be completed as shown by the Gantt Chart in Appendix A.
+% The bulk of the management plan will be organized in a Gantt chart, which can be included as an appendix and referred to in this section (“Appendix A contains a Gantt Chart showing…”).  However, also give the reader an overview of major tasks and milestones to give the Gantt chart some context.
+
+\myfigure{images/GanttChart.PNG}{Caption}{1}{fig:gantt}
+
+\section{Contingency Plan}
+The main plan is to navigate to all of the points using smooth arcs as shown in \cref{fig:robotCircle}. However, this may not be feasible due to the difficulty of programming this in assembly with the given time constraints. If this does not work, the original approach will be used in which the robot will turn to the next point in the list. The list order will be determined by which method of point ordering is implemented. The preproccsing is the optimal solution but may not work due to the minute time constraint on having the robot travel to all of the points. 
 
 \pagebreak
 \printbibliography{}

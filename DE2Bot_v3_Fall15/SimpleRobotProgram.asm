@@ -70,6 +70,7 @@ WaitForUser:
 	JPOS   WaitForUser ; not ready (KEYs are active-low, hence JPOS)
 	LOAD   Zero
 	OUT    XLEDS       ; clear LEDs once ready to continue
+	;CALL   StartLog
 	JUMP   Main
 
 ;***************************************************************
@@ -80,95 +81,85 @@ Main: ; "Real" program starts here.
 	OUT    	RESETPOS    ; reset odometer in case wheels moved after programming
 	CALL   	UARTClear   ; empty the UART receive FIFO of any old data
 	LOADI	InputArr
-	STORE	Pointer
-	; Test robot turning 90 degrees
-	CALL	Turn90
-	CALL	DIE
-Again:
-	CALL	MoveNext
-	LOAD	EndCount
-	ADDI	-24
-	JNEG	Again
-	CALL	NickSet
-	CALL	DIE
-
-Segmented:
-	CALL 	CurrPos
-	LOAD 	MoveXFirst
-	JZERO 	MovingX
-	JUMP 	MovingY
-
-
-MovingX:
-	CALL 	MoveNextSegmentX
-	LOAD 	MoveXFirst
-	SUB 	MoveXFirst
-	STORE 	MoveXFirst
-	JUMP 	MovingY
-	LOAD 	EndCount
-	JNEG 	Segmented
-	CALL	NickSet
-	CALL	DIE
-
-MovingY:
-	CALL 	MoveNextSegmentY
-	LOAD 	MoveXFirst
+	STORE	PointerX
 	ADDI 	1
-	STORE 	MoveXFirst
-	JUMP 	MovingX
-	LOAD 	EndCount
-	JNEG 	Segmented
-	CALL	NickSet
+	STORE 	PointerY
+	; This moves initial in the X direction first because we
+	; are always facing in the X at the very beginning
+	CALL 	CurrPosX
+	CALL 	MoveNextSegmentX
+
+	; This loop moves in groups of 4
+	; in the order y,y,x,x
+	CALL	LoopYYXX
+	; This does the end case for the final 3 movements because
+	; we move once in the beginning outside the loop
+	; This way we have 24 movements
+	CALL 	SlowTurn90Second
+	CALL 	CurrPosY
+	CALL 	MoveNextSegmentY
+	; Completes a point
+	CALL 	ToggleLED
+
+	CALL 	CurrPosY
+	CALL 	MoveNextSegmentY
+	CALL 	SlowTurn90Second
+	CALL 	CurrPosX
+	CALL 	MoveNextSegmentX
+	; Completes a point
+	CALL 	ToggleLED
+
+	CALL 	ResetPreviousVariables
 	CALL	DIE
+
+LoopYYXX:
+	CALL 	SlowTurn90Second
+	CALL 	CurrPosY
+	CALL 	MoveNextSegmentY
+	; Completes a point
+	CALL 	ToggleLED
+
+	CALL 	CurrPosY
+	CALL 	MoveNextSegmentY
+	CALL 	SlowTurn90Second
+	CALL 	CurrPosX
+	CALL 	MoveNextSegmentX
+	; Completes a point
+	CALL 	ToggleLED
+
+	CALL 	CurrPosX
+	CALL 	MoveNextSegmentX
+	LOAD 	EndCount
+	ADDI 	-21
+	JNEG 	LoopYYXX
+	RETURN
+
 
 ;***************************************************************
 ;* Advances the robot towards the next point
 ;***************************************************************
-NickSet:
+ResetPreviousVariables:
+	;CALL 	StopLog
 	LOAD	Zero
 	STORE	PrevX
 	STORE	PrevY
-	STORE	PrevAngle
 	STORE	PrevDist
 	STORE	EndCount
 	RETURN
 
+
+;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
+;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
+;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
+;NEXT SEVERAL FUNCTIONS ARE FOR DEBUGGING
 ;***************************************************************
-;* Advances the robot towards the next point
+;* Turn on and off LED for 5 seconds
 ;***************************************************************
-MoveNext:
-	; Determines the next destination
-	CALL	CurrPos
-	; Calculates the 2-d vector to travel in
-	LOAD	CurX
-	SUB		PrevX
-	STORE	L2X
-	STORE	AtanX
-	LOAD	CurY
-	SUB		PrevY
-	STORE	L2Y
-	STORE	AtanY
-	; Calculates the distance to move
-	CALL	L2Estimate
-	STORE	MyDist
-	; Calculates the angle to turn
-	CALL	Atan2
-	STORE	MyAngle
-	OUT		LCD
-	; Physically turns in that direction
-	CALL	RevertAngle
-	CALL	MyTurn
-	IN		THETA
-	STORE	PrevAngle
-	; Physically moves in that direction
-	; CALL	MyMove
-	IN		RPOS
-	STORE	PrevDist
-	; Update old position variables
-	LOAD	CurX
-	STORE	PrevX
-	LOAD	CurY
-	STORE	PrevY
+ToggleLED:
+	LOAD	Four
+	OUT 	BEEP
+	CALL	Wait1
+	OUT 	BEEP
 	RETURN
 
 ;***************************************************************
@@ -176,45 +167,47 @@ MoveNext:
 ;* turns (XDirection)
 ;***************************************************************
 MoveNextSegmentX:
-	LOAD EndCount
-	ADDI 1
-	STORE EndCount
 	LOAD   	CurX
 	SUB   	PrevX
-	STORE  	L2X
+	STORE  	MyDist
 	IN     	THETA
-	SUB    	Deg90
-	JPOS   	FACE180
+	SUB    	Deg270
+	JPOS   	FACE0
+	IN		THETA
+	SUB 	Deg90
+	JPOS 	FACE180
 	JUMP   	FACE0
 
 FACE0:
-	LOAD   	L2X
-	JPOS   	MoveFor
-	JUMP   	MoveBackwards
+	LOAD   	MyDist
+	JPOS   	MoveForX
+	JUMP   	MoveBackX
 
 FACE180:
-	LOAD   	L2X
-	JNEG   	MoveFor
-	JUMP   	MoveBackwards
+	LOAD   	MyDist
+	JNEG   	MoveForX
+	JUMP   	MoveBackX
 
-MoveFor:
-	LOAD  	CurX
-	STORE 	MyDist
-	LOAD  	PrevX
+MoveForX:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
+	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
 	STORE	PrevX
-	CALL  	MyMove
+	CALL  	PhysicallyMoveFor
 	Return
 
-MoveBackwards:
-	LOAD  	CurX
-	STORE 	MyDist
-	LOAD  	PrevX
+MoveBackX:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
+	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurX
 	STORE	PrevX
-	CALL  	MyMoveBack
+	CALL  	PhysicallyMoveBack
 	Return
 
 
@@ -223,53 +216,72 @@ MoveBackwards:
 ;* turns (YDirection)
 ;***************************************************************
 MoveNextSegmentY:
-	LOAD EndCount
-	ADDI 1
-	STORE EndCount
 	LOAD  	CurY
 	SUB  	PrevY
-	STORE  	L2Y
+	STORE  	MyDist
 	IN     	THETA
 	SUB    	Deg180
 	JPOS   	FACE270
 	JUMP   	FACE90
 
 FACE90:
-	LOAD   	L2Y
-	JPOS   	MoveFor
-	JUMP   	MoveBackwards
+	LOAD   	MyDist
+	JPOS   	MoveForY
+	JUMP   	MoveBackY
 
 FACE270:
-	LOAD   	L2Y
-	JNEG   	MoveFor
-	JUMP   	MoveBackwards
+	LOAD   	MyDist
+	JNEG   	MoveForY
+	JUMP   	MoveBackY
 
-MoveFor:
-	LOAD  	CurY
-	STORE 	MyDist
-	LOAD  	PrevY
+MoveForY:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
+	IN 		RPOS
 	STORE 	PrevDist
 	LOAD	CurY
 	STORE	PrevY
-	CALL  	MyMove
+	CALL  	PhysicallyMoveFor
 	Return
 
-MoveBackwards:
-	LOAD  	CurY
-	STORE 	MyDist
-	LOAD  	PrevY
+MoveBackY:
+	LOAD	MyDist
+	CALL	Abs
+	STORE	MyDist
+	IN 		RPOS
 	STORE 	PrevDist
-	LOAD  	CurY
-	STORE 	PrevY
-	CALL  	MyMoveBack
+	LOAD	CurY
+	STORE	PrevY
+	CALL  	PhysicallyMoveBack
 	Return
 
 
 ;***************************************************************
-;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection)
+;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
-MyMoveBack:
-	LOAD 	RFast
+PhysicallyMoveBack:
+	LOAD 	RSlow
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	IN 		RPOS
+	; 5999 - 6000 - -290
+	; Subtract how far the vehicle has gone since the beginning
+	SUB		PrevDist ; 0x04D1
+	; Subtract how far the vehicle needs to go to get to this point
+	ADD 	MyDist ; 0x0122
+	JPOS	PhysicallyMoveBack
+	; Quick Stop by doing one iteration of opposite direction
+	LOAD 	Zero
+	OUT 	RVELCMD
+	OUT 	LVELCMD
+	RETURN
+
+;***************************************************************
+;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
+;***************************************************************
+PhysicallyMoveFor:
+	LOAD 	FSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
@@ -277,95 +289,257 @@ MyMoveBack:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG	MyMove
-	RETURN
-
-;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection)
-;***************************************************************
-MyMove:
-	LOAD 	FFast
+	JNEG	PhysicallyMoveFor
+	; Quick Stop by doing one iteration of opposite direction
+	LOAD 	Zero
 	OUT 	RVELCMD
 	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JNEG	MyMove
 	RETURN
 
-;***************************************************************
-;* Tells the robot to move forward until it has advanced the length of MyDist
-;***************************************************************
-MyMoveBack:
-	LOAD 	FFast
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JNEG	MyMove
-	RETURN
+
 
 ;***************************************************************
-;* Tells the robot to turn back to the zero angle
+;* Wait 2 seconds
 ;***************************************************************
-RevertAngle:
-	LOAD	RFast
-	OUT 	LVELCMD
-	; Only turn with one wheel so that way it does not mess up RPOS
-	IN 		THETA
-	; Orient to zero
-	JPOS	MyTurn
-	LOAD	Zero
-	OUT 	LVELCMD
+Wait2Sec:
+	LOADI	0
+	OUT		TIMER
+Check2Sec:
+	IN 		TIMER
+	ADDI 	-10
+	JNEG	Check2Sec
 	RETURN
+
+
 ;***************************************************************
 ;* Tells the robot to turn until it has approached the angle of MyAngle
 ;***************************************************************
-MyTurn:
-	LOAD	RFast
+
+SlowTurn90:
+	LOAD	PrevAngle
+	ADDI	-270
+	JZERO	SetAngleZero
+	ADDI	90
+	STORE	PrevAngle
+	JUMP	PhysicallyTurn
+SetAngleZero:
+	STORE	PrevAngle
+PhysicallyTurn:
+	LOAD	RSlow
 	OUT 	LVELCMD
+	LOAD	FSlow
+	OUT		RVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
-	SUB		MyAngle
-	JNEG	MyTurn
+	OUT		LCD
+	SUB		PrevAngle
+	JNEG	SlowTurn90
+	ADDI	-260
+	JPOS	PhysicallyTurn
 	LOAD	Zero
 	OUT 	LVELCMD
+	OUT		RVELCMD
 	RETURN
 
-Turn90:
+FastTurn90:
 	LOAD	RFast
 	OUT 	LVELCMD
 	LOAD	FFast
 	OUT		RVELCMD
 	; Only turn with one wheel so that way it does not mess up RPOS
 	IN 		THETA
-	ADDI	-32
-	JNEG	Turn90
+	OUT		LCD
+	ADDI	-90
+	JNEG	FastTurn90
 	LOAD	Zero
 	OUT 	LVELCMD
 	OUT		RVELCMD
 	RETURN
 
+;***************************************************************
+;* Tells robot to turn 90 degrees (Mitch version)
+;***************************************************************
+
+SlowTurn90Second:
+	CALL 	Wait2Sec
+	IN 		THETA
+	STORE 	PrevAngle
+	ADDI 	-45
+	JNEG 	FACING0
+	ADDI 	-90
+	JNEG 	FACING90
+	ADDI 	-90
+	JNEG 	FACING180
+	ADDI 	-90
+	JNEG 	FACING270
+	JUMP 	FACING0
+
+FACING0:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-85
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING0
+
+FACING90:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-175
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING90
+
+FACING180:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-265
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING180
+
+FACING270:
+	LOAD 	RSlow
+	OUT 	LVELCMD
+	LOAD 	FSlow
+	OUT 	RVELCMD
+	IN 		THETA
+	ADDI 	-355
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	IN 		THETA
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	ADDI 	-1
+	JZERO 	ENDSPIN
+	JUMP FACING270
+
+ENDSPIN:
+	LOAD 	ZERO
+	OUT 	LVELCMD
+	OUT 	RVELCMD
+	CALL 	Wait2Sec
+	RETURN
 
 ;***************************************************************
 ;* Set Current Points
 ;* Saves your X and Y position that the pointer in inputs
 ;* is pointing to
 ;***************************************************************
-CurrPos:
-	ILOAD Pointer
+CurrPosX:
+	ILOAD PointerX
 	STORE CurX
-	CALL IncrementPtr
-	ILOAD Pointer
-	STORE CurY
-	CALL IncrementPtr
+	CALL IncrementPtrX
 	Return
 
+
+;***************************************************************
+;* Increment Pointer
+;* Moves the pointer down one in the array
+;***************************************************************
+IncrementPtrX:
+	LOAD PointerX
+	ADDI 2
+	STORE PointerX
+	LOAD EndCount
+	ADDI 1
+	STORE EndCount
+	Return
+
+
+
+;***************************************************************
+;* Set Current Points
+;* Saves your Y position that the pointer in inputs
+;* is pointing to
+;***************************************************************
+CurrPosY:
+	ILOAD PointerY
+	STORE CurY
+	CALL IncrementPtrY
+	Return
 
 
 
@@ -373,10 +547,13 @@ CurrPos:
 ;* Increment Pointer
 ;* Moves the pointer down one in the array
 ;***************************************************************
-IncrementPtr:
-	LOAD Pointer
+IncrementPtrY:
+	LOAD PointerY
+	ADDI 2
+	STORE PointerY
+	LOAD EndCount
 	ADDI 1
-	STORE Pointer
+	STORE EndCount
 	Return
 
 
@@ -1122,43 +1299,46 @@ L2T3: DW 0
 ;***************************************************************
 ;* Inputs
 ;***************************************************************
-Pointer:	DW 0
+PointerX:	DW 0
+PointerY: 	DW 0
 PrevX:		DW 0
 PrevY:		DW 0
 CurX:		DW 0
 CurY:		DW 0
 MyDist:		DW 0
-MyAngle:	DW 0
 PrevDist:	DW 0
 PrevAngle:	DW 0
-MoveXFirst:	DW 0
+EndCount:	DW 0
+LightUpLED: DW 1
+TurnOffLED: DW 0
+LightUpLED2: 	DW 2
 
 InputArr:
-X0:			DW 1162
-Y0:			DW 581
-X1:			DW 581
-Y1:			DW 1743
-X2:			DW 0
-Y2:			DW -581
-X3:			DW 0
-Y3:			DW 0
-X4:			DW 0
-Y4:			DW 0
-X5:			DW 0
-Y5:			DW 0
-X6:			DW 0
-Y6:			DW 0
-X7:			DW 0
-Y7:			DW 0
-X8:			DW 0
-Y8:			DW 0
-X9:			DW 0
-Y9:			DW 0
-X10:		DW 0
-Y10:		DW 0
-X11:		DW 0
-Y11:		DW 0
-EndCount:	DW 0
+X0:      DW 290
+Y0:      DW 290
+X1:      DW 580
+Y1:      DW 580
+X2:      DW 870
+Y2:      DW 870
+X3:      DW 870
+Y3:      DW 870
+X4:      DW 580
+Y4:      DW 580
+X5:      DW 290
+Y5:      DW 290
+X6:      DW -290
+Y6:      DW 290
+X7:      DW -580
+Y7:      DW 580
+X8:      DW -870
+Y8:      DW 870
+X9:      DW -290
+Y9:      DW -290
+X10:      DW -580
+Y10:      DW -580
+X11:      DW -870
+Y11:      DW -870
+
 ;***************************************************************
 ;* Variables
 ;***************************************************************
