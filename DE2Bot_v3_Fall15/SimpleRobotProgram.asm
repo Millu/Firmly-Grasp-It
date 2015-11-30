@@ -84,8 +84,8 @@ Main: ; "Real" program starts here.
 	STORE	PointerX
 	ADDI 	1
 	STORE 	PointerY
-	ADDI 	1
-	STORE 	PointerOrd
+	ADDI	1
+	STORE	PointerOrd
 	; This moves initial in the X direction first because we
 	; are always facing in the X at the very beginning
 	CALL 	CurrPosX
@@ -101,8 +101,7 @@ Main: ; "Real" program starts here.
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
-	CALL 	ToggleLED
-	CALL 	CurrOrder
+	CALL	CurrOrder
 
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
@@ -110,7 +109,6 @@ Main: ; "Real" program starts here.
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
-	CALL 	ToggleLED
 	CALL 	CurrOrder
 
 	CALL 	ResetPreviousVariables
@@ -121,7 +119,6 @@ LoopYYXX:
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
 	; Completes a point
-	CALL 	ToggleLED
 	CALL 	CurrOrder
 
 	CALL 	CurrPosY
@@ -130,7 +127,6 @@ LoopYYXX:
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
 	; Completes a point
-	CALL 	ToggleLED
 	CALL 	CurrOrder
 
 	CALL 	CurrPosX
@@ -267,28 +263,16 @@ MoveBackY:
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveBack:
-MoveBackMid:
-	LOAD 	RMid
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; 5999 - 6000 + 290 - HalfFoot
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist ; 0x04D1
-	; Subtract how far the vehicle needs to go to get to this point
-	ADD 	MyDist ; 0x0122
-	SUB 	HalfFoot
-	JPOS	MoveBackMid
-MoveBackSlow:
 	LOAD 	RSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
+	; 5999 - 6000 - -290
 	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
+	SUB		PrevDist ; 0x04D1
 	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	JPOS 	MoveBackSlow
+	ADD 	MyDist ; 0x0122
+	JPOS	PhysicallyMoveBack
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
 	OUT 	RVELCMD
@@ -299,18 +283,6 @@ MoveBackSlow:
 ;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveFor:
-MoveForMid:
-	LOAD 	FMid
-	OUT 	RVELCMD
-	OUT 	LVELCMD
-	IN 		RPOS
-	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
-	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	ADD 	HalfFoot
-	JNEG	MoveForMid
-MoveForSlow:
 	LOAD 	FSlow
 	OUT 	RVELCMD
 	OUT 	LVELCMD
@@ -319,7 +291,7 @@ MoveForSlow:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG 	MoveForSlow
+	JNEG	PhysicallyMoveFor
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
 	OUT 	RVELCMD
@@ -586,29 +558,17 @@ IncrementPtrY:
 	STORE EndCount
 	Return
 
-
-;***************************************************************
-;* Set Current Points
-;* Saves your Y position that the pointer in inputs
-;* is pointing to
-;***************************************************************
 CurrOrder:
-	ILOAD 	PointerOrd
-	CALL 	IndicateDest
-	CALL 	IncrementPtrOrder
+	ILOAD	PointerOrd
+	CALL	IndicateDest
+	CALL	IncrementPtrOrder
 	Return
-
-
-;***************************************************************
-;* Increment Pointer
-;* Moves the pointer down one in the array
-;***************************************************************
+	
 IncrementPtrOrder:
-	LOAD PointerOrd
-	ADDI 3
-	STORE PointerOrd
+	LOAD	PointerOrd
+	ADDI	3
+	STORE	PointerOrd
 	Return
-
 
 ; This table is used in example 1.  Remember: DW puts these
 ; values in memory, and since SCOMP has unified memory, it
@@ -1370,28 +1330,40 @@ LightUpLED2: 	DW 2
 InputArr:
 X0:      DW 290
 Y0:      DW 290
+Order0:	 DW 2
 X1:      DW 580
 Y1:      DW 580
+Order1:	 DW 5
 X2:      DW 870
 Y2:      DW 870
+Order2:	 DW 1
 X3:      DW 870
 Y3:      DW 870
+Order3:	 DW 7
 X4:      DW 580
 Y4:      DW 580
+Order4:	 DW 3
 X5:      DW 290
 Y5:      DW 290
+Order5:	 DW 10
 X6:      DW -290
 Y6:      DW 290
+Order6:	 DW 8
 X7:      DW -580
 Y7:      DW 580
+Order7:	 DW 12
 X8:      DW -870
 Y8:      DW 870
+Order8:	 DW 11
 X9:      DW -290
 Y9:      DW -290
+Order9:	 DW 9
 X10:      DW -580
 Y10:      DW -580
+Order10:	 DW 6
 X11:      DW -870
 Y11:      DW -870
+Order11:	 DW 4
 
 ;***************************************************************
 ;* Variables
@@ -1440,7 +1412,6 @@ LowNibl:  DW &HF       ; 0000 0000 0000 1111
 ; some useful movement values
 OneMeter: DW 952       ; ~1m in 1.05mm units
 HalfMeter: DW 476      ; ~0.5m in 1.05mm units
-HalfFoot:	DW 145
 OneFoot:  DW 290       ; ~1ft in 1.05mm robot units
 TwoFeet:  DW 581       ; ~2ft in 1.05mm units
 Deg90:    DW 90        ; 90 degrees in odometer units
