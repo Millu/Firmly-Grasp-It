@@ -70,7 +70,7 @@ WaitForUser:
 	JPOS   WaitForUser ; not ready (KEYs are active-low, hence JPOS)
 	LOAD   Zero
 	OUT    XLEDS       ; clear LEDs once ready to continue
-	;CALL   StartLog
+	CALL   StartLog
 	JUMP   Main
 
 ;***************************************************************
@@ -84,6 +84,8 @@ Main: ; "Real" program starts here.
 	STORE	PointerX
 	ADDI 	1
 	STORE 	PointerY
+	ADDI 	1
+	STORE 	PointerOrd
 	; This moves initial in the X direction first because we
 	; are always facing in the X at the very beginning
 	CALL 	CurrPosX
@@ -100,6 +102,7 @@ Main: ; "Real" program starts here.
 	CALL 	MoveNextSegmentY
 	; Completes a point
 	CALL 	ToggleLED
+	CALL 	CurrOrder
 
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
@@ -108,6 +111,7 @@ Main: ; "Real" program starts here.
 	CALL 	MoveNextSegmentX
 	; Completes a point
 	CALL 	ToggleLED
+	CALL 	CurrOrder
 
 	CALL 	ResetPreviousVariables
 	CALL	DIE
@@ -118,6 +122,7 @@ LoopYYXX:
 	CALL 	MoveNextSegmentY
 	; Completes a point
 	CALL 	ToggleLED
+	CALL 	CurrOrder
 
 	CALL 	CurrPosY
 	CALL 	MoveNextSegmentY
@@ -126,6 +131,7 @@ LoopYYXX:
 	CALL 	MoveNextSegmentX
 	; Completes a point
 	CALL 	ToggleLED
+	CALL 	CurrOrder
 
 	CALL 	CurrPosX
 	CALL 	MoveNextSegmentX
@@ -139,7 +145,7 @@ LoopYYXX:
 ;* Advances the robot towards the next point
 ;***************************************************************
 ResetPreviousVariables:
-	;CALL 	StopLog
+	CALL 	StopLog
 	LOAD	Zero
 	STORE	PrevX
 	STORE	PrevY
@@ -261,19 +267,18 @@ MoveBackY:
 ;* Tells the robot to move backwards until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveBack:
-MoveBackMed:
-	LOADI 	RMid
+MoveBackMid:
+	LOAD 	RMid
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
+	; 5999 - 6000 + 290 - HalfFoot
 	; Subtract how far the vehicle has gone since the beginning
-	SUB		PrevDist
+	SUB		PrevDist ; 0x04D1
 	; Subtract how far the vehicle needs to go to get to this point
-	SUB 	MyDist
-	ADD 	HalfFoot
-	JNEG 	MoveBackSlow
-	JUMP	MoveBackMed
-	
+	ADD 	MyDist ; 0x0122
+	SUB 	HalfFoot
+	JPOS	MoveBackMid
 MoveBackSlow:
 	LOAD 	RSlow
 	OUT 	RVELCMD
@@ -283,7 +288,7 @@ MoveBackSlow:
 	SUB		PrevDist
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
-	JNEG 	MoveBackSlow
+	JPOS 	MoveBackSlow
 	; Quick Stop by doing one iteration of opposite direction
 	LOAD 	Zero
 	OUT 	RVELCMD
@@ -294,9 +299,8 @@ MoveBackSlow:
 ;* Tells the robot to move forward until it has advanced the length of MyDist (Xdirection and Ydirection/Segmented)
 ;***************************************************************
 PhysicallyMoveFor:
-
-MoveForMed:
-	LOADI 	FMid
+MoveForMid:
+	LOAD 	FMid
 	OUT 	RVELCMD
 	OUT 	LVELCMD
 	IN 		RPOS
@@ -305,9 +309,7 @@ MoveForMed:
 	; Subtract how far the vehicle needs to go to get to this point
 	SUB 	MyDist
 	ADD 	HalfFoot
-	JNEG 	MoveForSlow
-	JUMP	MoveForMed
-	
+	JNEG	MoveForMid
 MoveForSlow:
 	LOAD 	FSlow
 	OUT 	RVELCMD
@@ -549,7 +551,7 @@ CurrPosX:
 ;***************************************************************
 IncrementPtrX:
 	LOAD PointerX
-	ADDI 2
+	ADDI 3
 	STORE PointerX
 	LOAD EndCount
 	ADDI 1
@@ -577,11 +579,34 @@ CurrPosY:
 ;***************************************************************
 IncrementPtrY:
 	LOAD PointerY
-	ADDI 2
+	ADDI 3
 	STORE PointerY
 	LOAD EndCount
 	ADDI 1
 	STORE EndCount
+	Return
+
+
+;***************************************************************
+;* Set Current Points
+;* Saves your Y position that the pointer in inputs
+;* is pointing to
+;***************************************************************
+CurrOrder:
+	ILOAD 	PointerOrd
+	CALL 	IndicateDest
+	CALL 	IncrementPtrOrder
+	Return
+
+
+;***************************************************************
+;* Increment Pointer
+;* Moves the pointer down one in the array
+;***************************************************************
+IncrementPtrOrder:
+	LOAD PointerOrd
+	ADDI 3
+	STORE PointerOrd
 	Return
 
 
@@ -1329,6 +1354,7 @@ L2T3: DW 0
 ;***************************************************************
 PointerX:	DW 0
 PointerY: 	DW 0
+PointerOrd:	DW 0
 PrevX:		DW 0
 PrevY:		DW 0
 CurX:		DW 0

@@ -14,12 +14,12 @@ pthread_mutex_t exitMutex, startCountMutex;
 pthread_cond_t exitCond;
 double sum = 1000000;
 Coordinates locations[13];
-double points[13][13];  
-Coordinates shortestThreads[8][13]; 
+double points[13][13];
+Coordinates shortestThreads[8][13];
 double sums[8];
 
 
-             
+
 double distanceFormula(double x1, double x2, double y1, double y2) {
     double tmp = pow((y2 - y1), 2);
     double tmp2 = pow((x2 - x1), 2);
@@ -46,7 +46,7 @@ void calcDistances() {
 }
 
 void* calcShortest(void* v) {
-    // Cast thread number into 
+    // Cast thread number into
     int threadNo = (unsigned long)v;
     sums[threadNo] = 100000;
     shortestThreads[threadNo][0] = locations[0];
@@ -119,8 +119,8 @@ void* calcShortest(void* v) {
                                                 + points[n][o] + points[o][p] + points[p][q]
                                                 + points[q][r] + points[r][s] + points[s][t];
                                                 // cout << tmpSum << " Counting: " << counter << endl;
-                                                counter++;                                                                                                                           
-                                                if (tmpSum < sums[threadNo]) {      
+                                                counter++;
+                                                if (tmpSum < sums[threadNo]) {
                                                     sums[threadNo] = tmpSum;
                                                     shortestThreads[threadNo][1] = locations[i];
                                                     shortestThreads[threadNo][2] = locations[j];
@@ -134,7 +134,7 @@ void* calcShortest(void* v) {
                                                     shortestThreads[threadNo][10] = locations[r];
                                                     shortestThreads[threadNo][11] = locations[s];
                                                     shortestThreads[threadNo][12] = locations[t];
-                                                }                                                
+                                                }
                                             }
                                         }
                                     }
@@ -147,16 +147,15 @@ void* calcShortest(void* v) {
         }
     }
     // cout << "Count " << counter << endl;
-    pthread_mutex_lock(&startCountMutex);    
+    pthread_mutex_lock(&startCountMutex);
     startCount--;
-    cout << "startCount " << startCount << endl;
     if (startCount == 0) {
         pthread_mutex_unlock(&startCountMutex);
         pthread_mutex_lock(&exitMutex);
         pthread_cond_broadcast(&exitCond);
         pthread_mutex_unlock(&exitMutex);
     } else {
-        pthread_mutex_unlock(&startCountMutex);    
+        pthread_mutex_unlock(&startCountMutex);
     }
     return 0;
 }
@@ -165,20 +164,52 @@ int main(int argc, const char* argv[]) {
 
     ifstream input(argv[1]);
 
-    string xStr;
-    string yStr;
-    int i = 1;
+    string initPoints;
     locations[0] = new Coordinates(0, 0, 0);
+    bool negative = false;
+    bool onX = true;
+    char holder[1];
+    int order = 1;
+    double x;
+    double y;
+    getline(input, initPoints);
+    for (int i = 0; i < initPoints.length(); i++) {
+        const char charNum = initPoints.at(i);
+        holder[0] = charNum;
+        if (onX) {
+            if (charNum == '-') {
+                negative = true;
+            } else {
+                if (negative) {
+                    x = atoi(holder);
+                    x = x * -1;
+                    negative = false;
+                } else {
+                    x = atoi(holder);
+                    negative = false;
+                }
+                onX = false;
+            }
+        } else {
+            if (charNum == '-') {
+                negative = true;
+            } else {
+                if (negative) {
+                    y = atoi(holder);
+                    y = y * -1;
+                    negative = false;
+                } else {
+                    y = atoi(holder);
+                    negative = false;
+                }
+                onX = true;
+                locations[order] = new Coordinates(x, y, order);
+                order++;
+            }
 
-    while (getline(input, xStr)) {
-        getline(input, yStr);
-        const char* xChar = xStr.c_str();
-        const char* yChar = yStr.c_str();
+        }
 
-        double x = atoi(xChar);
-        double y = atoi(yChar);
-        locations[i] = new Coordinates(x, y, i);
-        i++;
+
     }
     for (int i = 0; i < 13; i++) {
         cout << "Coordinate " << locations[i].getOrder() << ": X = "
@@ -222,7 +253,7 @@ int main(int argc, const char* argv[]) {
         //cout << "Coordinate " << shortest[i].getOrder() << endl;
         cout << "X" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getX() * 290 << endl;
         cout << "Y" << i - 1 << ":      DW " << shortestThreads[smallestIndex][i].getY() * 290 << endl;
-
+        cout << "Order" << i - 1 << ":  DW " << shortestThreads[smallestIndex][i].getOrder() << endl;
     }
     free(pts);
 }
